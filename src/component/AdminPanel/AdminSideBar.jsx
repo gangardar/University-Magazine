@@ -1,72 +1,68 @@
-import React, { useContext } from "react";
+import React from 'react';
 import {
-  FaTaxi,
-  FaCircleNodes,
-  FaMotorcycle,
-  FaPeopleGroup,
-  FaClipboardList,
-  FaPowerOff,
-} from "react-icons/fa6";
+  CDBSidebar,
+  CDBSidebarContent,
+  CDBSidebarFooter,
+  CDBSidebarHeader,
+  CDBSidebarMenu,
+  CDBSidebarMenuItem,
+} from 'cdbreact';
 
-import { Link, NavLink, Navigate } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
 
-const AdminSideBar = () => {
-
+const Sidebar = () => {
   return (
-    <div className="bg-body-tertiary sidebar pt-3 vh-100">
-      <div className="m-2">
-        <i className="me-3 fs-4 my-auto mx-1">
-          <p>Logo</p>
-          {/* <img src={logo} className="logo" alt="logo" /> */}
-        </i>
-        <span className="brand-name fs-4">Takasi</span>
-      </div>
-      <hr className="text-dark" />
-      <div className="list-group list-group-flush">
-        <a className="list-group-item py-2">
-          <i className="fs-5 me-3">
-            <FaCircleNodes />
-          </i>
-          <span className="fs-5">Dashboard</span>
-        </a>
-        <NavLink
-          to={"/admin/list-driver"}
-          className="list-group-item py-2 nav-link"
-        >
-          <i className=" fs-5 me-3">
-            <FaMotorcycle />
-          </i>
-          <span className="fs-5">Drivers</span>
-        </NavLink>
-        <NavLink
-          to={"/admin/list-passenger"}
-          className="list-group-item py-2 nav-link"
-        >
-          <i className=" fs-5 me-3">
-            <FaPeopleGroup />
-          </i>
-          <span className="fs-5">Passenger</span>
-        </NavLink>
-        <a className="list-group-item py-2">
-          <i className=" fs-5 me-3">
-            <FaClipboardList />
-          </i>
-          <span className="fs-5">Report</span>
-        </a>
-        <NavLink
-          to={"/admin/admin-login"}
-          className="list-group-item py-2 nav-link"
-        >
-          <i className=" fs-5 me-3">
-            <FaPowerOff />
-          </i>
-          <span className="fs-5">
-            Logout
-          </span>
-        </NavLink>
-      </div>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}>
+      <CDBSidebar textColor="#fff" backgroundColor="#001F3F">
+        <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
+        <a
+            href="/"
+            className="text-decoration-none"
+            style={{ color: 'inherit' }}
+          > Logo
+            
+          </a>
+        </CDBSidebarHeader>
+
+        <CDBSidebarContent className="sidebar-content">
+          <CDBSidebarMenu>
+            <NavLink  to="/admin" >
+              <CDBSidebarMenuItem icon="columns">Dashboard</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink  to="/faculty" >
+              <CDBSidebarMenuItem icon="landmark">Faculty</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink  to="/marketing_manager" >
+              <CDBSidebarMenuItem icon="user-graduate">Marketing Manager</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink  to="/marketing_coordinator" >
+              <CDBSidebarMenuItem icon="user-tie">Marketing Coordiantor</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink  to="/student" >
+              <CDBSidebarMenuItem icon="users">Student</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink  to="/term" >
+              <CDBSidebarMenuItem icon="business-time">Terms</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink  to="/analytics">
+              <CDBSidebarMenuItem icon="chart-line">Analytics</CDBSidebarMenuItem>
+            </NavLink>
+
+            <NavLink  to="/hero404"  >
+              <CDBSidebarMenuItem icon="user-circle">Profile</CDBSidebarMenuItem>
+            </NavLink>
+          </CDBSidebarMenu>          
+          
+        </CDBSidebarContent>
+
+        <CDBSidebarFooter className='sidebar-content'>
+        <NavLink  to="/profile" >
+              <CDBSidebarMenuItem icon="user">Profile page</CDBSidebarMenuItem>
+            </NavLink>
+        </CDBSidebarFooter>
+      </CDBSidebar>
     </div>
   );
 };
 
-export default AdminSideBar;
+export default Sidebar;
