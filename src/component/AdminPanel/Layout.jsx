@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { Outlet, useNavigate } from "react-router-dom";
 import AdminSideBar from "./AdminSideBar";
+import { Col, Container, Row } from "react-bootstrap";
 
 const Layout = () => {
   
@@ -12,18 +13,20 @@ const Layout = () => {
     setToggle(!toggle);
   };
   return (
-    <div className="container-fluid bg-dark min-vh-100 position-fixed">
-      <div className="row g-0">
-        {toggle && (
-          <div className="col-2 bg-body-tertiary">
-            <AdminSideBar />
-          </div>
-        )}
-        <div className="col">
-          <Outlet />
-        </div>
-      </div>
-    </div>
+    <>
+    <Container fluid>
+    <Row>
+      <Col className="ps-0" xs='auto'>
+        {/* Content for AdminSideBar */}
+        <AdminSideBar />
+      </Col>
+      <Col >
+        {/* Content for Outlet */}
+        <Outlet />
+      </Col>
+    </Row>
+    </Container>  
+    </>
   );
 };
 

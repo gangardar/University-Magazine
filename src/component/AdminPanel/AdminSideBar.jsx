@@ -29,7 +29,7 @@ const Sidebar = () => {
             <NavLink  to="/admin" >
               <CDBSidebarMenuItem icon="columns">Dashboard</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="/faculty" >
+            <NavLink  to="faculty" >
               <CDBSidebarMenuItem icon="landmark">Faculty</CDBSidebarMenuItem>
             </NavLink>
             <NavLink  to="/marketing_manager" >
