@@ -1,21 +1,29 @@
 import React from "react";
 import { Table, Button, Form, Row } from "react-bootstrap";
 
-const FacultyTable = ({
+const TableComponent = ({
   data,
   onUpdate,
   onDelete,
   onSelectStateChange,
   currentSelectState,
 }) => {
+    if(!data | data.length === 0){
+        return (
+            <p>No Data was Found!</p>
+        );
+    }
+    const tableHeadings = Object.keys(data[0]);
+
   return (
     <Row>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>@</th>
-            <th>ID</th>
-            <th>Name</th>
+            {tableHeadings.map((item)=>(
+                <th key={item}>{item}</th>
+            ))}
             <th>Action</th>
           </tr>
         </thead>
@@ -64,4 +72,4 @@ const FacultyTable = ({
   );
 };
 
-export default FacultyTable;
+export default TableComponent;

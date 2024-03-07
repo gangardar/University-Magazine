@@ -16,11 +16,11 @@ const Layout = () => {
     <>
     <Container fluid>
     <Row>
-      <Col className="ps-0" xs='auto'>
+      <Col xs='auto' className="ps-0" >
         {/* Content for AdminSideBar */}
         <AdminSideBar />
       </Col>
-      <Col >
+      <Col xs={9} md={9} lg={9}>
         {/* Content for Outlet */}
         <Outlet />
       </Col>

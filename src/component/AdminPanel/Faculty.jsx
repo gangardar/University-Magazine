@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-import FacultyTable from "./FacultyTable";
 import { facultyData } from "./Data";
 import AddFaculty from "./AddFaculty";
 import UpdateFaculty from "./UpdateFaculty";
+import BulkDelete from "./ReusableComponents/BulkDelete";
+import TableComponent from "./ReusableComponents/TableComponent";
 
 const Faculty = () => {
   const [data, setData] = useState(facultyData);
   const [selectedState, setSelectedState] = useState([]);
   // Update Modal State
   const [updateModalState, setUpdateModalState] = useState(false);
-  const [selectedFacultyId, setSelectedFacultyId] = useState(null);
+  const [selectedFacultyId, setSelectedFacultyId] = useState([]);
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
 
   const onSelectStateChange = (id) => {
@@ -31,7 +32,7 @@ const Faculty = () => {
   const handleUpdateModalOpen = (id) => {
     setSelectedFacultyId(id);
 
-    const faculty = facultyData.filter((item)=> item.id === id);
+    const faculty = data.filter((item)=> item.id === id);
     setToUpdateFacultyData(faculty);
 
     setUpdateModalState(true);
@@ -61,13 +62,22 @@ const Faculty = () => {
   const handleDelete = (id) =>{
     const confirmDelete = window.confirm('Are you sure you want to delete this faculty?');
     if(confirmDelete){
-      const updatedData = data.filter((faculty) => faculty.id !== id);
+      const updatedData = data.filter((data) => data.id !== id);
       setData(updatedData);
     }    
   }
 
+  const handleBulkDelete = () =>{
+    const confirmDelete = window.confirm('Are you sure you want to delete selected faculty?');
+    if(confirmDelete){
+      const updatedData = data.filter((data) => {selectedFacultyId.map(id)=> data.id !== id})
+    }
+  }
+
   const handleModalSubmit = (faculty) => {
-    const id = data.length + 1;
+    let lastIndex = data.length -1;
+    const db = data[lastIndex];
+    const id = db.id +1;
     const newRow = { id: id, name: faculty.facultyName };
     setData((data) => [...data, newRow]);
   };
@@ -81,8 +91,12 @@ const Faculty = () => {
           handleModalSubmit={handleUpdate}
           facultyData={toUpdateFacultyData}
         />
+        <div className='d-flex justify-content-end mb-3'>
+          <BulkDelete data={selectedState}/>
         <AddFaculty handleModalSubmit={handleModalSubmit} />
-        <FacultyTable
+        </div>
+        
+        <TableComponent
           data={data}
           onDelete={handleDelete} // Add your delete logic here
           onUpdate={handleUpdateModalOpen}

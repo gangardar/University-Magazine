@@ -12,9 +12,7 @@ export default function AddFaculty({handleModalSubmit}) {
   const { register, handleSubmit, formState: { errors } } = useForm();  
   return (
     <>
-    <div className='d-flex justify-content-end mb-3'>
-    <Button onClick={handleModalClose} variant='success'>Add New</Button> 
-    </div>
+    <Button onClick={handleModalClose} variant='success'>Add New</Button>     
     <Modal show={modalState} onHide={handleModalClose} centered>
         <Modal.Header closeButton>
           <Modal.Title className="text-primary">Add New Faculty</Modal.Title>

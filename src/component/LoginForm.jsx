@@ -16,7 +16,8 @@ function LoginForm() {
     <Container style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px', maxWidth: '650px',}}>
       <Row className="mb-2 justify-content-center">
         <Col xs={12} md={10}>
-          <Image src={logo} />
+          <img src="" alt="" />
+          <Image src="https://university-magazine-backend.onrender.com/api/v1/user/profilePhoto/download/1" />
         </Col>        
       </Row>
 
