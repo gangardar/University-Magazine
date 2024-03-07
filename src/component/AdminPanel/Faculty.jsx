@@ -68,10 +68,10 @@ const Faculty = () => {
   }
 
   const handleBulkDelete = () =>{
-    const confirmDelete = window.confirm('Are you sure you want to delete selected faculty?');
-    if(confirmDelete){
-      const updatedData = data.filter((data) => {selectedFacultyId.map(id)=> data.id !== id})
-    }
+    // const confirmDelete = window.confirm('Are you sure you want to delete selected faculty?');
+    // if(confirmDelete){
+    //   const updatedData = data.filter((data) => {selectedFacultyId.map(id)=> data.id !== id})
+    // }
   }
 
   const handleModalSubmit = (faculty) => {
