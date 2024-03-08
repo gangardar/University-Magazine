@@ -1,0 +1,35 @@
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #242424;
+    padding: 8px 18px;
+    border-radius: 50px;
+    margin-right: 16px;
+    height: 46px;
+}
+
+.search-box input {
+    padding: 6px;
+    background: transparent;
+    font-size: 18px;
+    max-width: 180px;
+    border: 0;
+    outline: 0;
+    color: white;
+}
+
+.search-box input::placeholder {
+    color: white;
+}
+
+.search-box img {
+    width: 20px;
+    cursor: pointer;
+}
+
+
+.line {
+    border-top: 1px solid #ccc;
+    width: 100%;
+    margin-top: 0px;
+}

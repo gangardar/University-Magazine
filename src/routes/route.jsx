@@ -9,36 +9,52 @@ import StudentPage from '../Pages/StudentPage';
 import FacultyPage from '../Pages/FacultyPage';
 import PrototypeTable from '../component/Prototype/PrototypeTable';
 import { createBrowserRouter } from 'react-router-dom';
+import Home from '../component/Student/pages/Home/Home';
+import Submit from '../component/Student/pages/Submit/Submit';
 
 const route = createBrowserRouter([
-    {
-      path: "/",
-      element: <LoginPage />,
-      errorElement: <NotFound/>,
-      
-    },
-    {
-      path: "/admin",
-      element: <Layout/>,
-      errorElement: <NotFound/>,
-      children: [
-        {
-          index: true,
-          path: "/admin",
-          element: <DashboardPage/>
-        },
-        { path: "/admin/marketing-manager", element: <MarketingCoPage/> },
-        { path: "/admin/marketing-coordinator", element: <MarketingMaPage /> },
-        { path: "/admin/student", element: <StudentPage/> },
-        {path : "/admin/faculty", element: <FacultyPage/>}
-      ]
-    },
-    {
-      path:"/prototype",
-      element: <PrototypeTable/>,
-      errorElement: <NotFound/>,
-    }
-    
-  ]);
+  {
+    path: "/",
+    element: <LoginPage />,
+    errorElement: <NotFound />,
+
+  },
+  {
+    path: "/admin",
+    element: <Layout />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        path: "/admin",
+        element: <DashboardPage />
+      },
+      { path: "/admin/marketing-manager", element: <MarketingCoPage /> },
+      { path: "/admin/marketing-coordinator", element: <MarketingMaPage /> },
+      { path: "/admin/student", element: <StudentPage /> },
+      { path: "/admin/faculty", element: <FacultyPage /> },
+    ]
+  },
+  {
+    path: "/prototype",
+    element: <PrototypeTable />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/",
+    element: <StudentPage />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        path: "/student",
+        element: <StudentPage />
+      },
+      { path: "/student/home", element: <Home /> },
+      { path: "/student/submit", element: <Submit /> },
+    ]
+  },
+
+]);
 
 export default route

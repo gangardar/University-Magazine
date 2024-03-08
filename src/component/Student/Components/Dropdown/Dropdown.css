@@ -1,0 +1,22 @@
+
+  .dropdown-item {
+    cursor: pointer;
+    width: 100%;
+    padding: 10px;
+    transition: background 0.2s;
+  }
+  
+  
+  .dropdown-item:hover {
+    background: #f4f4f4;
+  }
+  
+  .arrow-down{
+      width: 16px;
+      cursor: pointer;
+  }
+
+  .arrow-up{
+    width: 20px;
+    cursor: pointer;
+}
