@@ -9,7 +9,7 @@ export default function AddFaculty({handleModalSubmit}) {
     setModalState(!modalState);
    }
 
-  const { register, handleSubmit, formState: { errors } } = useForm();  
+  const { register, handleSubmit, formState: { errors } } = useForm();
   return (
     <>
     <Button onClick={handleModalClose} variant='success'>Add New</Button>     
@@ -19,12 +19,12 @@ export default function AddFaculty({handleModalSubmit}) {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit(handleModalSubmit)}>
-            <Form.Group controlId="facultyName">
+            <Form.Group controlId="name">
               <Form.Label className="font-weight-bold">Faculty Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Faculty Name"
-                {...register("facultyName", { required: true })}
+                {...register("name", { required: true })}
               />
             </Form.Group>
 

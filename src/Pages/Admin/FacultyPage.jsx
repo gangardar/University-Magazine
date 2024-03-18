@@ -1,5 +1,5 @@
 import React from 'react'
-import Faculty from '../component/AdminPanel/Faculty'
+import Faculty from '../../component/AdminPanel/Faculty/Faculty'
 
 const FacultyPage = () => {
   return (

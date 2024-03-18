@@ -1,5 +1,0 @@
-export const facultyData = [
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "John Doe" },
-    { id: 3, name: "John Doe" }
-]
