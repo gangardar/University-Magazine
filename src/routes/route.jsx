@@ -12,6 +12,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Home from '../component/Student/pages/Home/Home';
 import Submit from '../component/Student/pages/Submit/Submit';
 import StudentAdminPage from '../Pages/Admin/StudentAdminPage';
+import TermPage from '../Pages/Admin/TermPage';
 
 const route = createBrowserRouter([
   {
@@ -34,6 +35,7 @@ const route = createBrowserRouter([
       { path: "/admin/marketing_coordinator", element: <MarketingCoPage /> },
       { path: "/admin/student", element: <StudentAdminPage/> },
       { path: "/admin/faculty", element: <FacultyPage /> },
+      { path: "/admin/term", element: <TermPage /> }
     ]
   },
   {
