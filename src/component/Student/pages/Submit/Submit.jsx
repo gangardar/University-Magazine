@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../Submit/Submit.css"
 import Image from "../../../../assets/image.png"
 import Navbar from "../../Components/Navbar/Navbar";
+import axios from 'axios';
+import SuccessAlert from "../../Components/Alert/AlertDialog";
 
 const Submit = () => {
 
   const [articleTitle, setArticleTitle] = useState('');
+
+  const [file, setFile] = useState(null);
+  const [coverPhoto, setCoverPhoto] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
+  };
+
+  const handleCoverPhotoChange = (event) => {
+    setCoverPhoto(event.target.files[0]);
+  };
 
   const handleChange = (e) => {
     setArticleTitle(e.target.value);
@@ -17,23 +31,73 @@ const Submit = () => {
     setIsChecked(!isChecked);
   };
 
+  const [showSuccess, setShowSuccess] = useState(true);
+
+  const handleShowSuccess = () => {
+    setShowSuccess(true);
+  };
+
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('coverPhoto', coverPhoto);
+      formData.append(
+        'article',
+        JSON.stringify({
+          title: articleTitle,
+          academicYear: {
+            id: 1,
+          },
+          user: {
+            id: 1,
+          },
+          academicYear: {
+            id: 2024
+          }
+        })
+      );
+
+      console.log("formData =====> ", file + coverPhoto + articleTitle)
+      const response = await axios.post(
+        'https://university-magazine-backend.onrender.com/api/v1/article/add',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      console.log("Response ==> " + response.data);
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
+  };
+
   const handleCancelClick = () => {
     console.log('handleCancelClick');
   };
 
-  const handleSubmitClick = () => {
-    console.log('handleSubmitClick');
-  };
-
   return (
     <div>
+
+      <SuccessAlert
+        show={showSuccess}
+        handleClose={handleCloseSuccess}
+        message="Your article was successfully submitted."
+      />
 
       <Navbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
 
         <div style={{ display: 'flex', width: '50%', paddingRight: '2%' }}>
           <div style={{ width: '100%', marginTop: '96px', justifyContent: "center", alignItems: 'center' }}>
-            <img src={Image} alt="" style={{ width: '70%', marginLeft: '30%', height: '320px' }} />
+            <img src={coverPhoto ? URL.createObjectURL(coverPhoto) : Image} alt="" style={{ width: '70%', marginLeft: '30%', height: '320px' }} />
           </div>
         </div>
 
@@ -54,8 +118,8 @@ const Submit = () => {
                 value={articleTitle}
                 onChange={handleChange}
                 style={{
-                  height: '28px',
-                  width: '50%',
+                  height: '35px',
+                  width: '180px',
                   padding: "0px 5px",
                   border: '1px solid lightgray',
                   borderRadius: '5px',
@@ -68,15 +132,18 @@ const Submit = () => {
 
             <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column' }}>
               <label htmlFor="textInput" style={{ fontFamily: 'sans-serif', fontWeight: 'normal', fontSize: '13px', marginBottom: '5px' }}>Word Document</label>
-              <label style={{ padding: '7px', fontSize: '12px', maxWidth: 'fit-content', fontFamily: 'sans-serif', borderRadius: '5px', border: '1px solid black', cursor: 'pointer' }}>Upload Word Document</label>
+              <input type="file" accept=".docx" onChange={handleFileChange} style={{ fontSize: '12px' }} />
+              {/* <label style={{ padding: '7px', fontSize: '12px', maxWidth: 'fit-content', fontFamily: 'sans-serif', borderRadius: '5px', border: '1px solid black', cursor: 'pointer' }} onClick={() => fileInputRef.current.click()}>Upload Word Document</label> */}
+              {/* <label style={{ fontSize: '12px', fontFamily: 'sans-serif', color: 'black', marginLeft: '8px', }} className="input-word-docx"></label> */}
             </div>
 
             <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column' }}>
               <label htmlFor="textInput" style={{ fontFamily: 'sans-serif', fontWeight: 'normal', fontSize: '13px', marginBottom: '5px' }}>Images</label>
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <input type="file" accept="image/*" onChange={handleCoverPhotoChange} style={{ fontSize: '12px' }} />
+              {/* <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <label style={{ padding: '7px', fontSize: '12px', maxWidth: 'fit-content', fontFamily: 'sans-serif', borderRadius: '5px', border: '1px solid gray', color: 'gray', cursor: 'pointer' }}>Upload Image</label>
                 <label style={{ fontSize: '12px', fontFamily: 'sans-serif', color: 'black', marginLeft: '8px', }}>cover.jpg</label>
-              </div>
+              </div> */}
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -99,7 +166,7 @@ const Submit = () => {
 
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '28px' }}>
               <button onClick={handleCancelClick} style={{ padding: "10px 39px", backgroundColor: 'white', borderWidth: '1px', borderRadius: "7px", marginRight: '16px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={handleCancelClick} style={{ padding: "10px 38px", backgroundColor: 'black', borderWidth: '1px', borderRadius: "7px", color: 'white', cursor: 'pointer' }}>Submit</button>
+              <button onClick={handleSubmit} style={{ padding: "10px 38px", backgroundColor: 'black', borderWidth: '1px', borderRadius: "7px", color: 'white', cursor: 'pointer' }}>Submit</button>
             </div>
 
           </div>

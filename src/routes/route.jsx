@@ -11,6 +11,7 @@ import PrototypeTable from '../component/Prototype/PrototypeTable';
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../component/Student/pages/Home/Home';
 import Submit from '../component/Student/pages/Submit/Submit';
+import ArticleDetail from '../component/Student/pages/Detail/ArticleDetail';
 
 const route = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ const route = createBrowserRouter([
       },
       { path: "/student/home", element: <Home /> },
       { path: "/student/submit", element: <Submit /> },
+      { path: "/student/articleDetail", element: <ArticleDetail /> },
     ]
   },
 
