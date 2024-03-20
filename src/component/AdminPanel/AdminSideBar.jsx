@@ -10,7 +10,7 @@ import {
 
 import { NavLink } from 'react-router-dom';
 
-const Sidebar = () => {
+const AdminSideBar = () => {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}>
       <CDBSidebar textColor="#fff" backgroundColor="#001F3F">
@@ -29,22 +29,22 @@ const Sidebar = () => {
             <NavLink  to="/admin" >
               <CDBSidebarMenuItem icon="columns">Dashboard</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="faculty" >
+            <NavLink  to="/admin/faculty" >
               <CDBSidebarMenuItem icon="landmark">Faculty</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="/marketing_manager" >
+            <NavLink  to="/admin/marketing-manager" >
               <CDBSidebarMenuItem icon="user-graduate">Marketing Manager</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="/marketing_coordinator" >
+            <NavLink  to="/admin/marketing_coordinator" >
               <CDBSidebarMenuItem icon="user-tie">Marketing Coordiantor</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="/student" >
+            <NavLink  to="/admin/student" >
               <CDBSidebarMenuItem icon="users">Student</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="/term" >
+            <NavLink  to="/admin/term" >
               <CDBSidebarMenuItem icon="business-time">Terms</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink  to="/analytics">
+            <NavLink  to="/admin/analytics">
               <CDBSidebarMenuItem icon="chart-line">Analytics</CDBSidebarMenuItem>
             </NavLink>
 
@@ -65,4 +65,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default AdminSideBar;
