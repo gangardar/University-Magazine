@@ -1,18 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { facultyData } from "./Data";
 import AddFaculty from "./AddFaculty";
 import UpdateFaculty from "./UpdateFaculty";
-import BulkDelete from "./ReusableComponents/BulkDelete";
-import TableComponent from "./ReusableComponents/TableComponent";
+import BulkDelete from "../ReusableComponents/BulkDelete";
+import TableComponent from "../ReusableComponents/TableComponent";
+import endpointService from "../../../services/endpoint-service";
+import { CanceledError } from "axios";
+import TableSkeleton from "../ReusableComponents/TableSkeleton";
 
 const Faculty = () => {
-  const [data, setData] = useState(facultyData);
+
+  const [data, setData] = useState([]); 
+  const [Error, setError] = useState();
+  const [loading, setLoading] = useState(true); 
+
   const [selectedState, setSelectedState] = useState([]);
-  // Update Modal State
   const [updateModalState, setUpdateModalState] = useState(false);
   const [selectedFacultyId, setSelectedFacultyId] = useState([]);
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
+
+  useEffect(() => {
+    const {request,cancel} = endpointService.getAll();
+    request.then((res) => {
+      const reorderedData = res.data.sort((a, b) => a.id - b.id);
+      setData(res.data)
+      setLoading(false); 
+      console.log(res.data)
+    }).catch((err) => {
+      if (err instanceof CanceledError) return;
+      setError(err.message);
+      setLoading(false); 
+      console.log(Error);
+    })
+
+    return () => cancel();
+  }, []);
+
+  if (loading) {
+    return <TableSkeleton columnCount={4}/>; 
+  }
 
   const onSelectStateChange = (id) => {
     setSelectedState((prevSelectedState) => {
@@ -47,7 +73,15 @@ const Faculty = () => {
       if (facultyIndex !== -1) {
         // Update the data with the new faculty information
         const updatedData = [...data];
-        updatedData[facultyIndex] = { id: selectedFacultyId, name: faculty.facultyName };
+        updatedData[facultyIndex] = { id: selectedFacultyId, name: faculty.name };
+
+        endpointService.update(selectedFacultyId, faculty)
+        .then(() => setData(updatedData))
+        .catch((err) => {
+          if (err instanceof CanceledError) return;
+          setError(err.message);
+          console.log(Error);
+        })
 
         // Set the updated data in the state
         setData(updatedData);
@@ -60,10 +94,16 @@ const Faculty = () => {
   };
 
   const handleDelete = (id) =>{
+    const originalFaculties = [...data];
     const confirmDelete = window.confirm('Are you sure you want to delete this faculty?');
     if(confirmDelete){
       const updatedData = data.filter((data) => data.id !== id);
       setData(updatedData);
+
+      endpointService.delete(id).catch((err) => {
+        setError(err.message);
+        setData(originalFaculties);
+      })
     }    
   }
 
@@ -75,12 +115,31 @@ const Faculty = () => {
   }
 
   const handleModalSubmit = (faculty) => {
-    let lastIndex = data.length -1;
-    const db = data[lastIndex];
-    const id = db.id +1;
-    const newRow = { id: id, name: faculty.facultyName };
+    const originalFaculty = [...data];
+    
+    let id;
+    if (data.length === 0) {
+      // If data is empty, set id to 1 or any starting value you prefer
+      id = 1;
+    } else {
+      // Get the id based on the last element in the data array
+      const lastIndex = data.length - 1;
+      const lastRow = data[lastIndex];
+      id = lastRow.id + 1;
+    }
+    
+    // Include both id and name properties when adding a new faculty
+    const newRow = { id: id, name: faculty.name };
     setData((data) => [...data, newRow]);
+    
+    endpointService.create(faculty)
+      .catch((err) => {
+        setError(err);
+        setData(originalFaculty);
+      });
   };
+  
+  
 
   return (
     <>

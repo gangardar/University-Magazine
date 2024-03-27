@@ -1,30 +1,28 @@
-import React, { useState } from "react";
-import { Table, Button, Form, Row, Col } from "react-bootstrap";
-import Pagination from "./Pagination";
+import React, { useState } from 'react';
+import { Button, Col, Form, Row, Table } from 'react-bootstrap';
+import Pagination from './Pagination';
 
-const TableComponent = ({
+const UserTable = ({
   data,
   onUpdate,
   onDelete,
   onSelectStateChange,
   currentSelectState,
+  filterRole
 }) => {
+  const isAdminOrMarketingManager = filterRole === 'Admin' || filterRole === 'Marketing Manager';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
-  // Get current items
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (!data || data.length === 0) {
-    return <p>No Data was Found!</p>;
-  }
+  // Calculate index of the first and last item to display on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
-  const tableHeadings = Object.keys(data[0]);
+  // Filter the data based on the filterRole
+  const filteredData = currentItems.filter((item) => item.role === filterRole);
 
   return (
     <Row>
@@ -33,16 +31,17 @@ const TableComponent = ({
           <thead>
             <tr>
               <th>@</th>
-              {tableHeadings.map((item) => (
-                <th key={item}>{item}</th>
-              ))}
+              <th>ID</th>
+              <th>Name</th>
+              <th>Role</th>
+              {!isAdminOrMarketingManager && <th>Faculty</th>}
               <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {currentItems && currentItems.length > 0 ? (
-              currentItems.map((item) => (
+            {filteredData && filteredData.length > 0 ? (
+              filteredData.map((item) => (
                 <tr key={item.id}>
                   <td>
                     <Form.Check
@@ -51,9 +50,10 @@ const TableComponent = ({
                       onChange={() => onSelectStateChange(item.id)}
                     />
                   </td>
-                  {tableHeadings.map((heading) => (
-                    <td key={heading}>{item[heading]}</td>
-                  ))}
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.role}</td>
+                  {!isAdminOrMarketingManager && <td>{item?.faculty?.name}</td>}
                   <td>
                     <Button
                       className="mx-1"
@@ -74,7 +74,7 @@ const TableComponent = ({
               ))
             ) : (
               <tr>
-                <td colSpan={tableHeadings.length + 2}>
+                <td colSpan={isAdminOrMarketingManager ? '5' : '6'}>
                   <p>No Data was found!</p>
                 </td>
               </tr>
@@ -82,6 +82,7 @@ const TableComponent = ({
           </tbody>
         </Table>
       </Col>
+
       <Col xs={12} className="d-flex justify-content-center">
         <Pagination
           itemsPerPage={itemsPerPage}
@@ -94,4 +95,4 @@ const TableComponent = ({
   );
 };
 
-export default TableComponent;
+export default UserTable;

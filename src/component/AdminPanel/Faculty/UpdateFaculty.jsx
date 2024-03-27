@@ -7,7 +7,7 @@ const UpdateFaculty = ({ handleModalClose, modalState, handleModalSubmit, facult
 
   useEffect(() => {
     reset({
-      facultyName: facultyData && facultyData.length > 0 ? facultyData[0].name : ''
+      name: facultyData && facultyData.length > 0 ? facultyData[0].name : ''
     });
   }, [facultyData, reset]);
 
@@ -24,9 +24,9 @@ const UpdateFaculty = ({ handleModalClose, modalState, handleModalSubmit, facult
               <Form.Control
                 type="text"
                 placeholder="Enter Updated Faculty Name"
-                {...register('facultyName', { required: "Faculty's name is required!" })}
+                {...register('name', { required: "Faculty's name is required!" })}
               />
-            </Form.Group>
+            </Form.Group>            
             <ModalFooter>
               <Button type='submit' variant='success'>
                 Submit

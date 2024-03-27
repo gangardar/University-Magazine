@@ -6,7 +6,7 @@ import search_icon from '../../../../assets/search-icon-w.png';
 import notification from '../../../../assets/notification.png';
 import user from '../../../../assets/user.png';
 
-const Navbar = ({ data }) => {
+const Navbar = ({ data, status }) => {
     const location = useLocation();
 
     return (
@@ -33,6 +33,40 @@ const Navbar = ({ data }) => {
                             <h5 style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Submit</h5>
                         </Link>
                     </div>
+                ) : data == "isArticleDetail" ? (
+                    <div style={{ display: "flex", width: "50%", flexDirection: 'row', marginTop: "8px", alignItems: 'center', justifyContent: 'center' }}>
+
+                        {status == null ? (
+                            <>
+                                <Link to="/student/home" style={{
+                                    marginRight: '65px',
+                                    textDecoration: 'none',
+                                    borderBottom: `2px solid #17cf97`,
+                                    color: "#17cf97",
+                                }}>
+                                    <h5 style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Home</h5>
+                                </Link>
+                                <Link to="/student/submit" style={{
+                                    textDecoration: 'none',
+                                    borderBottom: 'transparent',
+                                    color: 'black',
+                                }}>
+                                    <h5 style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Submit</h5>
+                                </Link>
+                            </>
+
+                        ) : (
+                            <Link to="/marketingCoordinator/home" style={{
+                                marginRight: '65px',
+                                textDecoration: 'none',
+                                borderBottom: `2px solid #17cf97`,
+                                color: "#17cf97",
+                            }}>
+                                <h5 style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Home</h5>
+                            </Link>
+                        )}
+
+                    </div>
                 ) : (
                     <div style={{ display: "flex", width: "50%", flexDirection: 'row', marginTop: "8px", alignItems: 'center', justifyContent: 'center' }}>
                         <Link to="/student/home" style={{
@@ -43,15 +77,9 @@ const Navbar = ({ data }) => {
                         }}>
                             <h5 style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Home</h5>
                         </Link>
-                        <Link to="/student/submit" style={{
-                            textDecoration: 'none',
-                            borderBottom: 'transparent',
-                            color: 'black',
-                        }}>
-                            <h5 style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Submit</h5>
-                        </Link>
                     </div>
-                )}
+                )
+                }
 
                 <div style={{ display: 'flex', flexDirection: 'row', width: '40%', alignItems: 'center', justifyContent: 'end' }}>
                     <div className="search-box">

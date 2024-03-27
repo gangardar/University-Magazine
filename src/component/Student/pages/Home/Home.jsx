@@ -9,8 +9,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [academicYear, setAcademicYear] = useState([]);
 
   const navigate = useNavigate();
 
@@ -26,6 +27,18 @@ const Home = () => {
       });
   }, []);
 
+  useEffect(() => {
+    axios.get('https://university-magazine-backend.onrender.com/api/v1/academic-year')
+        .then(response => {
+            console.log('Response academicYear ==========> ', response.data);
+            setAcademicYear(response.data);
+        })
+        .catch(error => {
+            setError(error)
+            console.error('Error:', error);
+        });
+}, []);
+
   const handleCardClick = (item) => {
     console.log("Clicked item data:", item);
     navigate('/student/articleDetail', {state: {item: item}})
@@ -37,7 +50,7 @@ const Home = () => {
       {!error ? (
         <div className="home-container">
           <div className="home">
-            <Dropdown />
+            <Dropdown academicYearData={academicYear}/>
             {data != null ? <ArticleCard data={data} onCardClick={handleCardClick} /> : null}
           </div>
         </div>

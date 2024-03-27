@@ -8,6 +8,7 @@ import SuccessAlert from "../../Components/Alert/AlertDialog";
 const Submit = () => {
 
   const [articleTitle, setArticleTitle] = useState('');
+  const [showSuccessDialog, setShowSuccessDialog] = useState('');
 
   const [file, setFile] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
@@ -38,44 +39,37 @@ const Submit = () => {
   };
 
   const handleCloseSuccess = () => {
+    setArticleTitle("")
+    setFile(null)
+    setCoverPhoto(null)
     setShowSuccess(false);
   };
 
   const handleSubmit = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('coverPhoto', coverPhoto);
-      formData.append(
-        'article',
-        JSON.stringify({
-          title: articleTitle,
-          academicYear: {
-            id: 1,
-          },
-          user: {
-            id: 1,
-          },
-          academicYear: {
-            id: 2024
+    if (articleTitle != "" || file != null || coverPhoto != null) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('coverPhoto', coverPhoto);
+        formData.append('title', articleTitle);
+        formData.append('user', '1');
+        formData.append('academicYear', "1");
+
+        const response = await axios.post(
+          'https://university-magazine-backend.onrender.com/api/v1/article/add',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           }
-        })
-      );
+        );
 
-      console.log("formData =====> ", file + coverPhoto + articleTitle)
-      const response = await axios.post(
-        'https://university-magazine-backend.onrender.com/api/v1/article/add',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      console.log("Response ==> " + response.data);
-    } catch (error) {
-      console.error('Error uploading files:', error);
+        console.log("Response ==> ", response.data);
+        setShowSuccessDialog(true);
+      } catch (error) {
+        console.error('Error uploading files:', error);
+      }
     }
   };
 
@@ -86,11 +80,17 @@ const Submit = () => {
   return (
     <div>
 
-      <SuccessAlert
-        show={showSuccess}
-        handleClose={handleCloseSuccess}
-        message="Your article was successfully submitted."
-      />
+
+      {
+        showSuccessDialog ? (
+          <SuccessAlert
+            show={showSuccess}
+            handleClose={handleCloseSuccess}
+            message="Your article was successfully submitted."
+          />
+        ) : null
+      }
+
 
       <Navbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
