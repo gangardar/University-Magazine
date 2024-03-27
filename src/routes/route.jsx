@@ -11,8 +11,11 @@ import PrototypeTable from '../component/Prototype/PrototypeTable';
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../component/Student/pages/Home/Home';
 import Submit from '../component/Student/pages/Submit/Submit';
+import ArticleDetail from '../component/Student/pages/Detail/ArticleDetail';
 import StudentAdminPage from '../Pages/Admin/StudentAdminPage';
 import TermPage from '../Pages/Admin/TermPage';
+import MarketingCoordinatorPage from '../Pages/MarketingCoordinatorPage';
+import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCoHome';
 
 const route = createBrowserRouter([
   {
@@ -55,6 +58,21 @@ const route = createBrowserRouter([
       },
       { path: "/student/home", element: <Home /> },
       { path: "/student/submit", element: <Submit /> },
+      { path: "/student/articleDetail", element: <ArticleDetail /> },
+    ]
+  },
+  {
+    path: "/",
+    element: <MarketingCoordinatorPage />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        path: "/marketingCoordinator",
+        element: <MarketingCoordinatorPage />
+      },
+      { path: "/marketingCoordinator/home", element: <MarketingCoHome /> },
+      { path: "/marketingCoordinator/articleDetail", element: <ArticleDetail /> },
     ]
   },
 

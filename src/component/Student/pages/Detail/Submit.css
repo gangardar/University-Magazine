@@ -1,0 +1,7 @@
+.submit-container {
+    width: 100%;
+    display: flex;
+    background: #ffffff;
+    margin-top: 48px;
+    flex-direction: row;
+}

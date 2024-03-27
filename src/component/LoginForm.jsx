@@ -4,7 +4,6 @@ import logo from '../Logo.png';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
-// bizdept@kmdcomputer.com
 function LoginForm() {
 
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -68,9 +67,14 @@ function LoginForm() {
               </Form.Group>
 
               <Col className="text-center">
-                <Button variant="primary" type="submit">
+                {/* <Button variant="primary" type="submit">
                   Login
-                </Button>
+                </Button> */}
+                <Link to="/marketingCoordinator/home">
+                  <Button variant="primary" type="submit">
+                    Login
+                  </Button>
+                </Link>
               </Col>
             </Form>
           </Col>
