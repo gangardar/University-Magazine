@@ -78,14 +78,10 @@ function LoginForm() {
               </Form.Group>
 
               <Col className="text-center">
-                {/* <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit">
                   Login
-                </Button> */}
-                <Link to="/marketingCoordinator/home">
-                  <Button variant="primary" type="submit">
-                    Login
-                  </Button>
-                </Link>
+                </Button>
+                  
               </Col>
             </Form>
           </Col>

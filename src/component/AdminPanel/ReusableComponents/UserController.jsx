@@ -11,7 +11,7 @@ import TableSkeleton from "./TableSkeleton";
 
 const UserController = ({Role}) => {
 
-  const [data, setData] = useState(null); 
+  const [data, setData] = useState([]); 
   const [Error, setError] = useState();
   const[faculty, setFaculty] = useState([]);
   const [loading, setLoading] = useState(true); 
@@ -21,6 +21,10 @@ const UserController = ({Role}) => {
   const [updateModalState, setUpdateModalState] = useState(false);
   const [selectedFacultyId, setSelectedFacultyId] = useState([]);
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
+
+  useEffect(() => {
+    console.log('Updated data:', data);
+  }, [data]);
 
 
   useEffect(() => {
@@ -40,6 +44,7 @@ const UserController = ({Role}) => {
         const sortedFacultyData = endpointResponse.data.sort((a, b) => a.id - b.id);
         setLoading(false);
         setData(sortedManagerData);
+        console.log(data);
         setFaculty(sortedFacultyData);
       } catch (err) {
         if (err instanceof CanceledError) return;

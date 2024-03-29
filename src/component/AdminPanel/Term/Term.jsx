@@ -55,34 +55,29 @@ const Term = () => {
 
   const onUpdate = (term) => {
     if (selectedTermId !== null) {
-        // Find the index of the term with the selected ID
-        const termIndex = data.findIndex((item) => item.id === selectedTermId);
-
-        if (termIndex !== -1) {
-            // Convert date fields to the desired format
-            ['startDate', 'endDate', 'lastSubmitDate'].forEach((item) => {
-                if (term[item] instanceof Date) {
-                    term[item] = formatDateToYYYYMMDD(term[item]);
+        endpointService.update(selectedTermId, term)
+            .then(() => {
+                // Update the local state with the updated data
+                const updatedData = [...data];
+                const termIndex = updatedData.findIndex((item) => item.id === selectedTermId);
+                if (termIndex !== -1) {
+                    updatedData[termIndex] = term;
+                    setData(updatedData);
                 }
+            })
+            .catch((err) => {
+                if (err instanceof CanceledError) return;
+                setError(err.message);
+                console.log(err);
             });
 
-            // Update the data with the new term information
-            const updatedData = [...data];
-            updatedData[termIndex] = { id: selectedTermId, ...term };
-
-            endpointService.update(selectedTermId, term)
-                .then(() => setData(updatedData))
-                .catch((err) => {
-                    if (err instanceof CanceledError) return;
-                    setError(err.message);
-                    console.log(err);
-                });
-
-            // Close the modal
-            handleUpdateModalClose();
-        }
+        // Close the modal
+        handleUpdateModalClose();
     }
 };
+
+
+
 
 
 const onDelete = (id) =>{
@@ -110,14 +105,32 @@ const onDelete = (id) =>{
 
   const handleModalSubmit = (term) => {
     const originalTerm = [...data];
-    endpointService.create(term)
+    const newTerm = { ...term }; 
+
+    ['startDate', 'endDate', 'lastSubmitDate'].forEach((item) => {
+              if (newTerm[item] instanceof Date) {
+                  newTerm[item] = formatDateToYYYYMMDD(newTerm[item]);
+              }
+          });
+
+    let id;
+        if (data.length === 0) {
+            id = 1;
+        } else {
+            const lastIndex = data.length - 1;
+            const lastRow = data[lastIndex];
+            id = lastRow.id + 1;
+        }
+    const newRow = { id: id, ...newTerm };
+
+    endpointService.create(newTerm)
         .then((response) => {
-            // Handle success
-            const newRow = { id: response.data.id, ...term };
+            setData([...data, newRow]);
         })
         .catch((err) => {
             // Handle error
             setError(err);
+            setData(originalTerm);
         });
 };
 

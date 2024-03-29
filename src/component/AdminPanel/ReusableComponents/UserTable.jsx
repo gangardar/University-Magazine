@@ -10,7 +10,8 @@ const UserTable = ({
   currentSelectState,
   filterRole
 }) => {
-  const isAdminOrMarketingManager = filterRole === 'Admin' || filterRole === 'Marketing Manager';
+  console.log(data);
+  const isAdminOrMarketingManager = filterRole === 'ADMIN' || filterRole === 'MANAGER';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 

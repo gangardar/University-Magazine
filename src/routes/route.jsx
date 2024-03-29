@@ -48,7 +48,7 @@ const route = createBrowserRouter([
     errorElement: <NotFound />,
   },
   {
-    path: "/",
+    path: "/student",
     element: <StudentPage />,
     errorElement: <NotFound />,
     children: [
@@ -63,7 +63,7 @@ const route = createBrowserRouter([
     ]
   },
   {
-    path: "/",
+    path: "/marketingCoordinator",
     element: <MarketingCoordinatorPage />,
     errorElement: <NotFound />,
     children: [

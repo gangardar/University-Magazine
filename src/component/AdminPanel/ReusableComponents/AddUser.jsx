@@ -75,10 +75,10 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
                 defaultValue={Role || ""}
               >
                 <option value="">Select Role</option>
-                <option value="Admin">Admin</option>
-                <option value="Marketing Manager">Marketing Manager</option>
-                <option value="Marketing Coordinator">Marketing Coordinator</option>
-                <option value="Student">Student</option>
+                <option value="ADMIN">Admin</option>
+                <option value="MANAGER">Marketing Manager</option>
+                <option value="COORDINATOR">Marketing Coordinator</option>
+                <option value="STUDENT">Student</option>
                 {/* Add other roles as needed */}
               </Form.Control>
               <span className="text-danger">{errors.role?.message}</span>
