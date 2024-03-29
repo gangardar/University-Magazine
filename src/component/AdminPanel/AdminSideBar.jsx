@@ -9,20 +9,24 @@ import {
 } from 'cdbreact';
 
 import { NavLink } from 'react-router-dom';
+import logo from '../../assets/greenwich_white_logo.png'
+import { Image } from 'react-bootstrap';
 
 const AdminSideBar = () => {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}>
-      <CDBSidebar textColor="#fff" backgroundColor="#001F3F">
+        <CDBSidebar textColor="#fff" backgroundColor="#001F3F">
         <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
-        <a
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <a
             href="/"
             className="text-decoration-none"
             style={{ color: 'inherit' }}
-          > Logo
-            
+          >
+            <Image src={logo} style={{ width: '200px', marginRight: '10px' }} />
           </a>
-        </CDBSidebarHeader>
+        </div>
+      </CDBSidebarHeader>
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
@@ -57,7 +61,7 @@ const AdminSideBar = () => {
 
         <CDBSidebarFooter className='sidebar-content'>
         <NavLink  to="/profile" >
-              <CDBSidebarMenuItem icon="user">Profile page</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
             </NavLink>
         </CDBSidebarFooter>
       </CDBSidebar>
