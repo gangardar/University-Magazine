@@ -132,43 +132,9 @@ const onDelete = (id) =>{
             setError(err);
             setData(originalTerm);
         });
+
+      
 };
-
-
-//   const handleModalSubmit = (term) => {
-//     const originalTerm = [...data];
-//     const newTerm = { ...term }; 
-
-//     ['startDate', 'endDate', 'lastSubmitDate'].forEach((item) => {
-//         if (newTerm[item] instanceof Date) {
-//             newTerm[item] = formatDateToYYYYMMDD(newTerm[item]);
-//         }
-//     });
-
-//     let id;
-//     if (data.length === 0) {
-//         id = 1;
-//     } else {
-//         const lastIndex = data.length - 1;
-//         const lastRow = data[lastIndex];
-//         id = lastRow.id + 1;
-//     }
-    
-//     const newRow = { id: id, ...newTerm };
-//     console.log(newTerm);
-//     const formData = new FormData();
-//     formData.append('name', newTerm.name);
-//     formData.append('startDate', newTerm.startDate);
-//     formData.append('lastSubmitDate', newTerm.lastSubmitDate);
-//     formData.append('endDate', newTerm.endDate);
-//     setData([...data, newRow]);
-
-//     endpointService.create(formData)
-//     .catch((err) => {
-//       setError(err);
-//       setData(originalTerm);
-//     });
-// };
 
   return (
     <>

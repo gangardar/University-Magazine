@@ -17,6 +17,7 @@ import TermPage from '../Pages/Admin/TermPage';
 import MarketingCoordinatorPage from '../Pages/MarketingCoordinatorPage';
 import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCoHome';
 import { getRedirectPath } from '../component/getRedirectPath';
+import Profile from '../component/Profile';
 
 const route = createBrowserRouter([
   {
@@ -39,7 +40,8 @@ const route = createBrowserRouter([
       { path: "/admin/marketing_coordinator", element: <MarketingCoPage /> },
       { path: "/admin/student", element: <StudentAdminPage/> },
       { path: "/admin/faculty", element: <FacultyPage /> },
-      { path: "/admin/term", element: <TermPage /> }
+      { path: "/admin/term", element: <TermPage /> },
+      { path: "/admin/profile", element: <Profile />}
     ]
   },
   {
@@ -49,17 +51,16 @@ const route = createBrowserRouter([
   },
   {
     path: "/student",
-    element: <StudentPage />,
+    element: <StudentPage/>,
     errorElement: <NotFound />,
     children: [
       {
         index: true,
-        path: "/student",
-        element: <StudentPage />
+        path: "/student/home",
+        element: <Home />
       },
-      { path: "/student/home", element: <Home /> },
       { path: "/student/submit", element: <Submit /> },
-      { path: "/student/articleDetail", element: <ArticleDetail /> },
+      { path: "/student/articleDetail", element: <ArticleDetail/> },
     ]
   },
   {
@@ -70,7 +71,7 @@ const route = createBrowserRouter([
       {
         index: true,
         path: "/marketingCoordinator",
-        element: <MarketingCoordinatorPage />
+        element: <MarketingCoHome />
       },
       { path: "/marketingCoordinator/home", element: <MarketingCoHome /> },
       { path: "/marketingCoordinator/articleDetail", element: <ArticleDetail /> },
@@ -82,7 +83,6 @@ const route = createBrowserRouter([
 const userRole = localStorage.getItem("userRole");
 const redirectPath = getRedirectPath(userRole);
 
-// If user role is available and a redirect path is determined, redirect to that path
 if (userRole && redirectPath) {
   route.navigate(redirectPath)
 }
