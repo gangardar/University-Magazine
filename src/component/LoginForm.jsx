@@ -1,22 +1,37 @@
 import React from 'react'
 import { Button, Col, Container, Form, Image, Row } from 'react-bootstrap';
-import logo from '../Logo.png';
+import logo from '../assets/greenwich_green_logo.png';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { getRedirectPath } from './getRedirectPath';
+import loginendpoint from '../services/loginendpoint';
 
 function LoginForm() {
 
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
 
-  const handleFormSubmit = (data) => console.log(data);
+  const handleFormSubmit = async(data) => {
+    try {
+      const response = await loginendpoint.login(data);
+      loginendpoint.storeUserData(response.data);
+      console.log("Login successful!");
+      const path = getRedirectPath();
+      console.log(path);
+      navigate(path);
+  } catch (error) {
+      console.error("Login failed:", error);
+  }
+  };
 
   return (
     <>
       <Container style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px', maxWidth: '650px', }}>
-        <Row className="mb-2 justify-content-center">
+      <Row className="mb-2 justify-content-center">
           <Col xs={12} md={10}>
-            <img src="" alt="" />
-            <Image src="https://university-magazine-backend.onrender.com/api/v1/user/profilePhoto/download/1" />
+            <div className="d-flex justify-content-start">
+              <Image src={logo} fluid style={{width: '200px'}}/>
+            </div>
           </Col>
         </Row>
 
@@ -29,19 +44,15 @@ function LoginForm() {
 
 
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control {...register("email", {
-                  required: "email field is required",
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "Entered value does not match email format",
-                  },
+                <Form.Label>Username</Form.Label>
+                <Form.Control {...register("username", {
+                  required: "Username is required",
                 })}
-                  type="email" placeholder="Enter email" />
+                  type="username" placeholder="Enter username" />
                 <Form.Text className="text-muted">
-                  {errors.email ?
-                    <span className='text-danger'>{errors.email.message}</span> :
-                    <span>We'll never share your email with anyone else.</span>}
+                  {errors.username ?
+                    <span className='text-danger'>{errors.username.message}</span> :
+                    <span>We'll never share your username with anyone else.</span>}
                 </Form.Text>
               </Form.Group>
 
@@ -67,14 +78,10 @@ function LoginForm() {
               </Form.Group>
 
               <Col className="text-center">
-                {/* <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit">
                   Login
-                </Button> */}
-                <Link to="/marketingCoordinator/home">
-                  <Button variant="primary" type="submit">
-                    Login
-                  </Button>
-                </Link>
+                </Button>
+                  
               </Col>
             </Form>
           </Col>

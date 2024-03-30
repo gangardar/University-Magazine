@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Button, Form, Row, Col } from "react-bootstrap";
 import Pagination from "./Pagination";
+import { formatDate } from "../../dateUtil";
 
 const TableComponent = ({
   data,
@@ -52,7 +53,9 @@ const TableComponent = ({
                     />
                   </td>
                   {tableHeadings.map((heading) => (
-                    <td key={heading}>{item[heading]}</td>
+                    <td key={heading}>
+                      {/^\d{8}$/.test(item[heading]) ? formatDate(item[heading]) : item[heading]}
+                    </td>
                   ))}
                   <td>
                     <Button

@@ -4,7 +4,7 @@ import UserController from '../ReusableComponents/UserController'
 const Student = () => {
   return (
     <>
-        <UserController Role={"Student"} />
+        <UserController Role={"STUDENT"} />
     </>
   )
 }
