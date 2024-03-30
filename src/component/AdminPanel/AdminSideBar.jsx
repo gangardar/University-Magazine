@@ -52,17 +52,17 @@ const AdminSideBar = () => {
               <CDBSidebarMenuItem icon="chart-line">Analytics</CDBSidebarMenuItem>
             </NavLink>
 
-            <NavLink  to="/hero404"  >
-              <CDBSidebarMenuItem icon="user-circle">Profile</CDBSidebarMenuItem>
+            <NavLink  to="/logout"  >
+              <CDBSidebarMenuItem icon="user-circle">Logout</CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>          
           
         </CDBSidebarContent>
 
         <CDBSidebarFooter className='sidebar-content'>
-        <NavLink  to="/profile" >
-              <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
-            </NavLink>
+          <NavLink to="/admin/profile" style={{ textDecoration: 'none' }}>
+            <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
+          </NavLink>
         </CDBSidebarFooter>
       </CDBSidebar>
     </div>
