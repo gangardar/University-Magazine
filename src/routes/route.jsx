@@ -16,6 +16,7 @@ import StudentAdminPage from '../Pages/Admin/StudentAdminPage';
 import TermPage from '../Pages/Admin/TermPage';
 import MarketingCoordinatorPage from '../Pages/MarketingCoordinatorPage';
 import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCoHome';
+import { getRedirectPath } from '../component/getRedirectPath';
 
 const route = createBrowserRouter([
   {
@@ -47,7 +48,7 @@ const route = createBrowserRouter([
     errorElement: <NotFound />,
   },
   {
-    path: "/",
+    path: "/student",
     element: <StudentPage />,
     errorElement: <NotFound />,
     children: [
@@ -62,7 +63,7 @@ const route = createBrowserRouter([
     ]
   },
   {
-    path: "/",
+    path: "/marketingCoordinator",
     element: <MarketingCoordinatorPage />,
     errorElement: <NotFound />,
     children: [
@@ -77,5 +78,13 @@ const route = createBrowserRouter([
   },
 
 ]);
+
+const userRole = localStorage.getItem("userRole");
+const redirectPath = getRedirectPath(userRole);
+
+// If user role is available and a redirect path is determined, redirect to that path
+if (userRole && redirectPath) {
+  route.navigate(redirectPath)
+}
 
 export default route

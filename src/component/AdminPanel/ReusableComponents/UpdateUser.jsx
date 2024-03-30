@@ -59,30 +59,35 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
                   defaultValue={role || ""}
                 >
                   <option value="">Select Role</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Marketing Manager">Marketing Manager</option>
-                  <option value="Marketing Coordinator">Marketing Coordinator</option>
-                  <option value="Student">Student</option>
+                  <option value="ADMIN">Admin</option>
+                  <option value="MANAGER">Marketing Manager</option>
+                  <option value="COORDINATOR">Marketing Coordinator</option>
+                  <option value="STUDENT">Student</option>
                 </Form.Control>
                 <span className="text-danger">{errors.role?.message}</span>
               </Form.Group>
-              {role !== 'Admin' && role !== 'Marketing Manager' && (
+              {role !== 'ADMIN' && role !== 'MANAGER' && (
                 <Form.Group controlId="faculty">
-                  <Form.Label className="font-weight-bold">Faculty</Form.Label>
-                  <Form.Control
-                    as="select"
-                    placeholder="Enter Faculty ID"
-                    {...register("faculty", { required: "Faculty ID is required" })}
-                  >
-                    {faculty.length !== 0 &&
-                      faculty.map((data) => (
-                        <option key={data.id} value={data.id}>
-                          {data.name}
-                        </option>
-                      ))}
-                  </Form.Control>
-                  <span className="text-danger">{errors.faculty?.message}</span>
-                </Form.Group>
+                <Form.Label className="font-weight-bold">Faculty</Form.Label>
+                <Form.Control
+                  as="select"
+                  {...register("faculty", { required: "Faculty ID is required" })}
+                  defaultValue={data[0]?.faculty.id || ""}
+                >
+                  {faculty.length !== 0 &&
+                    faculty.map((facultyData) => (
+                      <option key={facultyData.id} value={facultyData.id}>
+                        {facultyData.name}
+                      </option>
+                    ))}
+                </Form.Control>
+                <span className="text-danger">{errors.faculty?.message}</span>
+                {data[0]?.faculty && ( // Show faculty ID below the select box if faculty exists
+                  <p>Faculty: {data[0].faculty.id}</p>
+                )}
+              </Form.Group>
+              
+              
               )}
               <ModalFooter>
                 <Button type='submit' variant='success'>
