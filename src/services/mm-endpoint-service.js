@@ -11,6 +11,15 @@ class ManagerEndPointService{
         return {request, cancel : () => controller.abort()}
     }
 
+    get(id) {
+        const controller = new AbortController();
+        const request = apiClient.get(`/user/${id}`, {
+            signal: controller.signal,
+        });
+    
+        return { request, cancel: () => controller.abort() };
+    }
+
     delete(id){
         return apiClient.delete("/user/"+id)
     }
