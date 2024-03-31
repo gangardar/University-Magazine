@@ -80,11 +80,11 @@ const route = createBrowserRouter([
 
 ]);
 
-const userRole = localStorage.getItem("userRole");
-const redirectPath = getRedirectPath(userRole);
+// const userRole = localStorage.getItem("userRole");
+// const redirectPath = getRedirectPath(userRole);
 
-if (userRole && redirectPath) {
-  route.navigate(redirectPath)
-}
+// if (userRole && redirectPath) {
+//   route.navigate(redirectPath)
+// }
 
 export default route

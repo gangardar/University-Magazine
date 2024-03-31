@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import Pagination from './Pagination';
 
@@ -14,16 +14,20 @@ const UserTable = ({
   const isAdminOrMarketingManager = filterRole === 'ADMIN' || filterRole === 'MANAGER';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    // Filter the data based on the filterRole
+    const filteredItems = data.filter((item) => item.role === filterRole);
+    setFilteredData(filteredItems);
+  }, [data, filterRole]);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Calculate index of the first and last item to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Filter the data based on the filterRole
-  const filteredData = currentItems.filter((item) => item.role === filterRole);
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <Row>
@@ -41,8 +45,8 @@ const UserTable = ({
           </thead>
 
           <tbody>
-            {filteredData && filteredData.length > 0 ? (
-              filteredData.map((item) => (
+            {currentItems && currentItems.length > 0 ? (
+              currentItems.map((item) => (
                 <tr key={item.id}>
                   <td>
                     <Form.Check
@@ -87,7 +91,7 @@ const UserTable = ({
       <Col xs={12} className="d-flex justify-content-center">
         <Pagination
           itemsPerPage={itemsPerPage}
-          totalItems={data.length}
+          totalItems={filteredData.length}
           currentPage={currentPage}
           paginate={paginate}
         />
