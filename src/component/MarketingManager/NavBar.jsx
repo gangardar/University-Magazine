@@ -13,9 +13,9 @@ const NavBar = ({user}) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
           <Nav className="mx-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Article</Nav.Link>
-            <Nav.Link href="#profile">Profile</Nav.Link>
+            <Nav.Link href="/marketingManager/home">Home</Nav.Link>
+            <Nav.Link href="/marketingManager/article">Article</Nav.Link>
+            <Nav.Link href="/marketingManager/profile">Profile</Nav.Link>
           </Nav>
           <Form className="d-flex">
             <FormControl type="search" placeholder="Search" className="mr-2" aria-label="Search" />

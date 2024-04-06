@@ -19,6 +19,7 @@ import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCo
 import { getRedirectPath } from '../component/getRedirectPath';
 import Profile from '../component/Profile/Profile';
 import MarketingManagerPage from '../Pages/MarketingManagerPage';
+import MarketingManager from '../component/MarketingManager/MarketingManager';
 
 const route = createBrowserRouter([
   {
@@ -57,6 +58,11 @@ const route = createBrowserRouter([
     children: [
       {
         index: true,
+        path: "/student",
+        element: <Home />
+      },
+      {
+        index: true,
         path: "/student/home",
         element: <Home />
       },
@@ -81,7 +87,14 @@ const route = createBrowserRouter([
   {
     path: "/marketingManager",
     element: <MarketingManagerPage />,
-    errorElement: <NotFound />
+    errorElement: <NotFound />,
+    children: [
+      {
+        index : true,
+        path: "/marketingManager/home",
+        element: <MarketingManager/>
+      }
+    ]
   }
 
 ]);
