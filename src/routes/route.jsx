@@ -17,7 +17,8 @@ import TermPage from '../Pages/Admin/TermPage';
 import MarketingCoordinatorPage from '../Pages/MarketingCoordinatorPage';
 import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCoHome';
 import { getRedirectPath } from '../component/getRedirectPath';
-import Profile from '../component/Profile';
+import Profile from '../component/Profile/Profile';
+import MarketingManagerPage from '../Pages/MarketingManagerPage';
 
 const route = createBrowserRouter([
   {
@@ -77,6 +78,11 @@ const route = createBrowserRouter([
       { path: "/marketingCoordinator/articleDetail", element: <ArticleDetail /> },
     ]
   },
+  {
+    path: "/marketingManager",
+    element: <MarketingManagerPage />,
+    errorElement: <NotFound />
+  }
 
 ]);
 

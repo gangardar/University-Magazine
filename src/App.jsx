@@ -1,15 +1,13 @@
+import { BrowserRouter as Router, RouterProvider } from 'react-router-dom';
+import route from './routes/route';
+import { QueryClientProvider, useQueryClient } from 'react-query';
 
-// import { BrowserRouter as Router } from 'react-router-dom';
-// import LoginPage from './Pages/LoginPage.jsx';
-// import Layout from './component/AdminPanel/Layout.jsx';
 
+function App() {
 
-// function App() {
-//   return (
-//    <Router>
-//     <Layout/>
-//    </Router> 
+  return (
+        <RouterProvider router={route} />   
         
-//   );
-// }
-// export default App;
+  );
+}
+export default App;

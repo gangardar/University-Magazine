@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './ArticleCard.css'
 import ArticleImage from '../../../../assets/image.png'
 import MessageSvg from '../../../../assets/message.svg'
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { Image, Container, Col, Row } from 'react-bootstrap';
+import { Image, Container, Col, Row, ButtonGroup } from 'react-bootstrap';
 import ThreeDotSvg from '../../../../assets/three_dots.svg';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
+
+    const[articles, setArticles] = useState();
+
+    useEffect(() => {
+        if (status === "Manager") {
+            const approvedArticles = data.filter(article => article.approveStatus === "APPROVED");
+            console.log(approvedArticles);
+            setArticles(approvedArticles);
+        } else {
+            setArticles(data);
+        }
+    }, [data, status]);
+    
 
     const handleRejectClick = (article_id) => {
         axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/reject/${article_id}`)
@@ -34,11 +47,14 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                 console.error('Error:', error);
             });
     };
-
+    if (!data || data.length === 0) {
+        return <div>No articles available.</div>;
+    }
+    
     if (status == null) {
         return (
             <div>
-                {data.map((item, index) => (
+                {articles && (articles?.map((item, index) => (
                     <div className="card-container"
                         key={index}
                         onClick={() => onCardClick(item)}
@@ -66,14 +82,14 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                             </Card.Body>
                         </Card>
                     </div>
-                ))
+                )))
                 }
             </div >
         )
     } else {
         return (
             <div>
-                {data.map((item, index) => (
+                {articles && (articles?.map((item, index) => (
                     <div className="card-container"
                         key={index}
                     >
@@ -94,26 +110,28 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                             <Card.Img onClick={() => onCardClick(item)} variant="top" src={item.coverPhoto ? item.coverPhoto : ArticleImage} style={{ width: '100%', height: '280px', borderRadius: '0%' }} />
                             <Card.Body>
                                 <Card.Title style={{ margin: '12px', fontFamily: 'sans-serif' }}>{item.title ? item.title : "Title"}</Card.Title>
-
-                                {/* <div style={{display:'flex', flexDirection:'row'}}> */}
-                                    {item.approveStatus == "APPROVED" ? (
-                                        <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
-                                    ) : item.approveStatus == "REJECTED" ? (
-                                        <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Rejected</label>
-                                    ) : (
-                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                            <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleRejectClick(item.id)}>Reject</label>
-                                            <label style={{ backgroundColor: 'green', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleAcceptClick(item.id)} >Approve</label>
-                                        </div>
+                                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        {item.approveStatus === "APPROVED" ? (
+                                            <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
+                                        ) : item.approveStatus === "REJECTED" ? (
+                                            <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Rejected</label>
+                                        ) : (
+                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleRejectClick(item.id)}>Reject</label>
+                                                <label style={{ backgroundColor: 'green', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleAcceptClick(item.id)}>Approve</label>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {status === "Manager" && (
+                                        <Button variant="primary" size="sm" onClick={() => handleDownloadClick(item.file)}>Download</Button>
                                     )}
-                                    {/* <img src={MessageSvg} alt='' className='arrow-up' style={{ marginLeft: '10px', width: '32px' }} />
-                                </div> */}
-
-
+                                </div>
                             </Card.Body>
+
                         </Card>
                     </div>
-                ))
+                )))
                 }
             </div >
         )

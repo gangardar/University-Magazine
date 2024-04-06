@@ -30,7 +30,7 @@ const Faculty = () => {
       if (err instanceof CanceledError) return;
       setError(err.message);
       setLoading(false); 
-      console.log(Error);
+      console.log(Error);setError(err.message);
     })
 
     return () => cancel();
