@@ -12,9 +12,38 @@ const ArticleDetail = () => {
     const item = location.state ? location.state.item : null;
     const [inputComment, setInputComment] = useState('');
     const [showDelete, setShowDelete] = useState(false);
+    const [commentIndex, setCommentIndex] = useState(-1);
 
     const [comment, setComment] = useState([]);
     const [error, setError] = useState(null);
+
+    const handleThreeDotClick = (showDelete, index) => {
+        setCommentIndex(index)
+        setShowDelete(showDelete)
+    
+    };
+
+    const handleDeleteClick = () => {
+        axios.delete(`https://university-magazine-backend.onrender.com/api/v1/comment/${commentIndex}`)
+        .then(response => {
+            setShowDelete(!showDelete)
+            console.log('Response Comment delete :', response.data);
+            axios.get(`https://university-magazine-backend.onrender.com/api/v1/comment/${item.id}`)
+            .then(response => {
+                setComment(response.data);
+            })
+            .catch(error => {
+                setError(error)
+                console.error('Error:', error);
+            });
+        })
+        .catch(error => {
+            setShowDelete(!showDelete)
+            setError(error)
+            console.error('Error:', error);
+        });
+        
+    }
 
     const handleRejectClick = (article_id) => {
         axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/reject/${article_id}`)
@@ -160,15 +189,16 @@ const ArticleDetail = () => {
                                             <span style={{ fontFamily: 'sans-serif', fontSize: '10px', fontWeight: 'normal', color: 'gray', marginTop: '0px' }}>{commentItem.createdAt ? formatDate(commentItem.createdAt) : ''}</span>
                                         </div>
                                         {
-                                            showDelete ? (
+                                            showDelete && commentIndex == commentItem.id ? (
                                                 <div style={{ marginLeft: '0px' }}>
-                                                    <div style={{ backgroundColor: "#f5f5f5", padding: '4px 8px', fontSize: '11px', zIndex: '1', cursor: 'pointer', position: 'absolute', marginLeft: '30px', marginTop: '12px' }} onClick={() => null}>delete</div>
+                                                    <div style={{ backgroundColor: "#f5f5f5", padding: '4px 8px', fontSize: '11px', zIndex: '1', cursor: 'pointer', position: 'absolute', marginLeft: '30px', marginTop: '12px' }} onClick={() => handleDeleteClick()}>delete</div>
                                                 </div>
                                             ) : null
                                         }
 
                                         <div style={{ display: 'flex', justifyContent: 'flex-start', marginLeft: '32px', flexDirection: 'column' }}>
-                                            <img src={ThreeDotVerticalSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} onClick={() => setShowDelete(!showDelete)} />
+                                            {/* <img src={ThreeDotVerticalSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} onClick={() => { setCommentIndex(index); setShowDelete(!showDelete); }} /> */}
+                                            <img src={ThreeDotVerticalSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} onClick={() => { handleThreeDotClick(!showDelete, commentItem.id) }} />
                                         </div>
 
 

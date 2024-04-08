@@ -61,7 +61,13 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                             <Card.Body>
                                 <Card.Title style={{ margin: '12px', fontFamily: 'sans-serif' }}>{item.title ? item.title : "Title"}</Card.Title>
 
-                                <label style={{ backgroundColor: item.approveStatus ? '#55DF3E' : 'lightgrey', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>{item.approveStatus ? "Selected" : "Pending"}</label>
+                                {item.approveStatus == "APPROVED" ? (
+                                        <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
+                                    ) : item.approveStatus == "REJECTED" ? (
+                                        <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Rejected</label>
+                                    ) : (
+                                        <label style={{ backgroundColor: 'lightgray', color: 'black', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Pending</label>
+                                    )}
 
                             </Card.Body>
                         </Card>

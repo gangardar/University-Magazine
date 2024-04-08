@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../Submit/Submit.css"
 import Image from "../../../../assets/image.png"
 import Navbar from "../../Components/Navbar/Navbar";
 import axios from 'axios';
 import SuccessAlert from "../../Components/Alert/AlertDialog";
+import ErrorSvg from "../../../../assets/error.svg"
 
 const Submit = () => {
 
@@ -12,6 +13,19 @@ const Submit = () => {
 
   const [file, setFile] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
+  const [showErrorAlert, setShowErrorAlert] = useState(false)
+  const [academicYearId, setAcademicYearId] = useState(-1)
+
+  useEffect(() => {
+    axios.get(`https://university-magazine-backend.onrender.com/api/v1/academic-year`)
+        .then(response => {
+            setAcademicYearId(response.data[0].id);
+        })
+        .catch(error => {
+            setError(error)
+            console.error('Error:', error);
+        });
+}, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -46,14 +60,19 @@ const Submit = () => {
   };
 
   const handleSubmit = async () => {
+
     if (articleTitle != "" || file != null || coverPhoto != null) {
+      if (!isChecked) {
+        setShowErrorAlert(!showErrorAlert)
+        return
+      }
       try {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('coverPhoto', coverPhoto);
         formData.append('title', articleTitle);
         formData.append('user', '1');
-        formData.append('academicYear', "1");
+        formData.append('academicYear', academicYearId);
 
         const response = await axios.post(
           'https://university-magazine-backend.onrender.com/api/v1/article/add',
@@ -66,8 +85,10 @@ const Submit = () => {
         );
 
         console.log("Response ==> ", response.data);
+        setShowErrorAlert(false)
         setShowSuccessDialog(true);
       } catch (error) {
+        setShowErrorAlert(false)
         console.error('Error uploading files:', error);
       }
     }
@@ -160,6 +181,9 @@ const Submit = () => {
 
                 />
                 <label style={{ fontSize: '12px', fontFamily: 'sans-serif', color: 'black', marginLeft: '3px', }}>Agree to Terms and Conditions</label>
+                {showErrorAlert &&
+                  <img src={ErrorSvg} alt="" style={{ width: '20px', marginLeft: "16px", height: '20px', }} />
+                }
               </div>
               <label htmlFor="textInput" style={{ fontFamily: 'sans-serif', fontWeight: 'normal', fontSize: '10px', marginTop: '3px', color: 'gray' }}>You must agree to the terms to submit</label>
             </div>
