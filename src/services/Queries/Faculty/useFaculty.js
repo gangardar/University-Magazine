@@ -3,9 +3,9 @@ import APIClient from "../../api-client-new";
 
 const apiClient = new APIClient("/faculty");
 
-const useUserById = () => {
-  const fetchUserById = () => apiClient.get(); 
-  return useQuery(["faculty", id], fetchUserById);
+const useFaculty = () => {
+  const fetchUserById = () => apiClient.getAll(); 
+  return useQuery(["faculties"], fetchUserById);
 };
 
-export default useUserById;
+export default useFaculty;

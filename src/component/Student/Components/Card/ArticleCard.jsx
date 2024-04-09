@@ -8,8 +8,15 @@ import { Image, Container, Col, Row, ButtonGroup } from 'react-bootstrap';
 import ThreeDotSvg from '../../../../assets/three_dots.svg';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import {useDownload} from "../../../../services/Download/useDownload"
+import JSZip from "jszip";
+import FileSaver from "file-saver";
+
 
 const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
+    
+
+    const {handleZip} = useDownload();
 
     const [articles, setArticles] = useState();
     const [error, setError] = useState(null);
@@ -57,6 +64,30 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                 console.error('Error:', error);
             });
     };
+
+    const handleDownloadClick = async (articleToDownload) => {
+        const zip = new JSZip();
+    
+        const articleResponse = await fetch(articleToDownload.file);
+        const articleBlob = await articleResponse.blob();
+        zip.file('toDownloadArticle.docx', articleBlob);
+    
+        const coverPhotoResponse = await fetch(articleToDownload.coverPhoto);
+        const coverPhotoBlob = await coverPhotoResponse.blob();
+        zip.file('coverPhoto.jpg', coverPhotoBlob);
+    
+        zip.generateAsync({ type: 'blob' })
+            .then(blob => {
+                FileSaver.saveAs(blob, 'article.zip');
+            })
+            .catch(error => {
+                console.error('Error generating zip:', error);
+            });
+    };
+    
+
+    
+
     if (!data || data.length === 0) {
         return <div>Loading...</div>;
     }
@@ -140,7 +171,7 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                                         )}
                                     </div>
                                     {status === "Manager" && (
-                                        <Button variant="primary" size="sm" onClick={() => handleDownloadClick(item.file)}>Download</Button>
+                                        <Button variant="primary" size="sm" onClick={() => handleDownloadClick(item)}>Download</Button>
                                     )}
                                 </div>
                             </Card.Body>
