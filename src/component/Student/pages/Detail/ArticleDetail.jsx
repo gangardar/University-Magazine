@@ -6,6 +6,7 @@ import ArticleImage from '../../../../assets/image.png'
 import ThreeDotSvg from '../../../../assets/three_dots.svg';
 import ThreeDotVerticalSvg from '../../../../assets/three_dot_vertical.svg';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
 
 const ArticleDetail = () => {
 
@@ -211,8 +212,11 @@ const ArticleDetail = () => {
                 <div style={{ display: 'flex', width: '49%', paddingRight: '2%', }}>
                     <div style={{ width: '100%', marginTop: '0px', justifyContent: "center", alignItems: 'center' }}>
                         <img src={item.coverPhoto} alt="" style={{ width: '70%', marginLeft: '30%', height: '320px' }} onClick={() => {
-                            window.open('https://university-magazine-backend.onrender.com/api/v1/article/file/download/2');
+                            
                         }} />
+                        <div style={{width:'100%', display:'flex', justifyContent:'end', marginTop:'5px'}}>
+                        <Button variant="primary" size="sm" onClick={() => window.open(item.file) }>Download</Button>
+                        </div>
                     </div>
                 </div>
 

@@ -17,6 +17,7 @@ const Submit = () => {
   const [academicYearId, setAcademicYearId] = useState(-1)
 
   const token = localStorage.getItem("token")
+  const userId = localStorage.getItem("userId")
 
   useEffect(() => {
     axios.get(`https://university-magazine-backend.onrender.com/api/v1/academic-year`, {
@@ -77,7 +78,7 @@ const Submit = () => {
         formData.append('file', file);
         formData.append('coverPhoto', coverPhoto);
         formData.append('title', articleTitle);
-        formData.append('user', '1');
+        formData.append('user', userId);
         formData.append('academicYear', academicYearId);
 
         const response = await axios.post(
