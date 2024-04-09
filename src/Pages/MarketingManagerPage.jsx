@@ -1,9 +1,9 @@
 import React from 'react'
-import MarketingManager from '../component/MarketingManager/MarketingManager'
+import ManagerLayout from '../component/MarketingManager/ManagerLayout'
 
 const MarketingManagerPage = () => {
   return (
-    <MarketingManager/>
+    <ManagerLayout/>
   )
 }
 
