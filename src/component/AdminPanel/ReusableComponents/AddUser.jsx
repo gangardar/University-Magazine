@@ -100,7 +100,7 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
               </Form.Control>
               <span className="text-danger">{errors.faculty?.message}</span>
             </Form.Group> */}
-            {Role !== 'Admin' && Role !== 'Marketing Manager' && (
+            {Role !== 'ADMIN' && Role !== 'MANAGER' && (
                 <Form.Group controlId="faculty">
                   <Form.Label className="font-weight-bold">Faculty</Form.Label>
                   <Form.Control

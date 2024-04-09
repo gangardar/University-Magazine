@@ -4,7 +4,7 @@ export function getRedirectPath() {
       case "ADMIN":
         return "/admin";
       case "STUDENT":
-        return "/student";
+        return "/student/home";
       case "COORDINATOR":
         return "/marketingCoordinator";
       case "MANAGER":

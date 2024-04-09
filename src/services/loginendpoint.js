@@ -10,6 +10,8 @@ class LoginEndPoint{
     storeUserData(userData) {
         localStorage.setItem("userId", userData.id);
         localStorage.setItem("userRole", userData.role);
+        localStorage.setItem("userName", userData.name);
+        localStorage.setItem("token", userData.token);
     }
 
 }

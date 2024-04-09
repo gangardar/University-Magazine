@@ -16,8 +16,14 @@ const Submit = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false)
   const [academicYearId, setAcademicYearId] = useState(-1)
 
+  const token = localStorage.getItem("token")
+
   useEffect(() => {
-    axios.get(`https://university-magazine-backend.onrender.com/api/v1/academic-year`)
+    axios.get(`https://university-magazine-backend.onrender.com/api/v1/academic-year`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
         .then(response => {
             setAcademicYearId(response.data[0].id);
         })
@@ -80,6 +86,7 @@ const Submit = () => {
           {
             headers: {
               'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${token}`
             },
           }
         );

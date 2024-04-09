@@ -44,7 +44,8 @@ const UserController = ({Role}) => {
         const sortedFacultyData = endpointResponse.data.sort((a, b) => a.id - b.id);
         setLoading(false);
         setData(sortedManagerData);
-        console.log(data);
+        console.log("data");
+        console.log("data"+data);
         setFaculty(sortedFacultyData);
       } catch (err) {
         if (err instanceof CanceledError) return;
