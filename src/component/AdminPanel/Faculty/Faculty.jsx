@@ -1,44 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import {Container } from "react-bootstrap";
 import AddFaculty from "./AddFaculty";
 import UpdateFaculty from "./UpdateFaculty";
 import BulkDelete from "../ReusableComponents/BulkDelete";
 import TableComponent from "../ReusableComponents/TableComponent";
-import endpointService from "../../../services/endpoint-service";
-import { CanceledError } from "axios";
 import TableSkeleton from "../ReusableComponents/TableSkeleton";
+import useFaculty from "../../../services/Queries/Faculty/useFaculty";
+import useAddFaculty from "../../../services/Queries/Faculty/useAddFaculty";
+import SuccessMessage from "../../Feedback/SuccessMessage";
+import ErrorMessage from "../../Feedback/ErrorMessage";
+import useUpdateFaculty from "../../../services/Queries/Faculty/useUpdateFaculty";
+import useRemoveFaculty from "../../../services/Queries/Faculty/useRemoveFaculty";
 
 const Faculty = () => {
 
   const [data, setData] = useState([]); 
-  const [Error, setError] = useState();
-  const [loading, setLoading] = useState(true); 
 
   const [selectedState, setSelectedState] = useState([]);
   const [updateModalState, setUpdateModalState] = useState(false);
   const [selectedFacultyId, setSelectedFacultyId] = useState([]);
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
 
+  const {data : facultyData, isError : isFacultyFetchError,
+     isLoading : facultyFetchLoading, error : facultyFetchError} = useFaculty();
+
+  const {mutateAsync : createFaculty, isError : isFacultyCreateError,
+     isSuccess: isFacultyCreateSuccess, error : facultyCreateError} = useAddFaculty();
+
+  const {mutateAsync : updateFaculty, isError : isFacultyUpdateError,
+     isSuccess: isFacultyUpdateSuccess, error : facultyUpdateError} = useUpdateFaculty();
+    
+  const {mutateAsync : deleteFaculty, isError : isFacultyDeleteError,
+    isSuccess: isFacultyDeleteSuccess, error : facultyDeleteError} = useRemoveFaculty();
+
   useEffect(() => {
-    const {request,cancel} = endpointService.getAll();
-    request.then((res) => {
-      const reorderedData = res.data.sort((a, b) => a.id - b.id);
-      setData(res.data)
-      setLoading(false); 
-      console.log(res.data)
-    }).catch((err) => {
-      if (err instanceof CanceledError) return;
-      setError(err.message);
-      setLoading(false); 
-      console.log(Error);setError(err.message);
-    })
+          const reorderedData = facultyData?.sort((a, b) => a.id - b.id);
+            setData(reorderedData);
+  }, [facultyData]);
 
-    return () => cancel();
-  }, []);
-
-  if (loading) {
+  if (facultyFetchLoading) {
     return <TableSkeleton columnCount={4}/>; 
   }
+
 
   const onSelectStateChange = (id) => {
     setSelectedState((prevSelectedState) => {
@@ -74,17 +77,10 @@ const Faculty = () => {
         // Update the data with the new faculty information
         const updatedData = [...data];
         updatedData[facultyIndex] = { id: selectedFacultyId, name: faculty.name };
-
-        endpointService.update(selectedFacultyId, faculty)
-        .then(() => setData(updatedData))
-        .catch((err) => {
-          if (err instanceof CanceledError) return;
-          setError(err.message);
-          console.log(Error);
-        })
-
-        // Set the updated data in the state
-        setData(updatedData);
+        updateFaculty({faculty, selectedFacultyId});
+        if(isFacultyUpdateSuccess){
+          setData(updatedData);
+        }
       }
     }
     
@@ -100,19 +96,33 @@ const Faculty = () => {
       const updatedData = data.filter((data) => data.id !== id);
       setData(updatedData);
 
-      endpointService.delete(id).catch((err) => {
-        setError(err.message);
+      deleteFaculty(id);
+      if(isFacultyDeleteError){
         setData(originalFaculties);
-      })
+      }
     }    
   }
 
-  const handleBulkDelete = () =>{
-    // const confirmDelete = window.confirm('Are you sure you want to delete selected faculty?');
-    // if(confirmDelete){
-    //   const updatedData = data.filter((data) => {selectedFacultyId.map(id)=> data.id !== id})
-    // }
-  }
+  const handleBulkDelete = () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete selected faculties?');
+    if (confirmDelete) {
+      const originalData = [...data];
+      const deletedIds = [];
+      selectedState.forEach((id) => {
+        deleteFaculty(id)
+          .then(() => {
+            deletedIds.push(id);
+          })
+          .catch((err) => {
+            setData(originalData);
+          });
+      });
+      const updatedData = data.filter((faculty) => !deletedIds.includes(faculty.id));
+      setData(updatedData);
+      setSelectedState([]); // Clear selected state
+    }
+  };
+  
 
   const handleModalSubmit = (faculty) => {
     const originalFaculty = [...data];
@@ -132,17 +142,23 @@ const Faculty = () => {
     const newRow = { id: id, name: faculty.name };
     setData((data) => [...data, newRow]);
     
-    endpointService.create(faculty)
-      .catch((err) => {
-        setError(err);
-        setData(originalFaculty);
-      });
+    createFaculty(faculty);
+    if(isFacultyCreateError){
+      setData(originalFaculty);
+    }
+
   };
   
   
 
   return (
     <>
+    {isFacultyCreateSuccess && <SuccessMessage message={"Faculty Added Successfully!"} />}
+    {isFacultyCreateError && <ErrorMessage message={facultyCreateError}/>}
+    {isFacultyUpdateSuccess && <SuccessMessage message={"Faculty Updated Successfully!"} />}
+    {isFacultyUpdateError && <ErrorMessage message={facultyUpdateError}/>}
+    {isFacultyDeleteSuccess && <SuccessMessage message={"Faculty Deleted Successfully"}/>}
+    {isFacultyDeleteError && <ErrorMessage message={facultyDeleteError} />}
       <Container className="mt-5 w-md-50">
         <UpdateFaculty
           handleModalClose={handleUpdateModalClose}
@@ -151,7 +167,7 @@ const Faculty = () => {
           facultyData={toUpdateFacultyData}
         />
         <div className='d-flex justify-content-end mb-3'>
-          <BulkDelete data={selectedState}/>
+          <BulkDelete data={selectedState} bulkDelete={handleBulkDelete}/>
         <AddFaculty handleModalSubmit={handleModalSubmit} />
         </div>
         

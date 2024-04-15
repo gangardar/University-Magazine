@@ -8,7 +8,7 @@ import MarketingMaPage from '../Pages/Admin/MarketingMaPage';
 import StudentPage from '../Pages/StudentPage';
 import FacultyPage from '../Pages/Admin/FacultyPage';
 import PrototypeTable from '../component/Prototype/PrototypeTable';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, useNavigate } from 'react-router-dom';
 import Home from '../component/Student/pages/Home/Home';
 import Submit from '../component/Student/pages/Submit/Submit';
 import ArticleDetail from '../component/Student/pages/Detail/ArticleDetail';
@@ -20,6 +20,8 @@ import { getRedirectPath } from '../component/getRedirectPath';
 import Profile from '../component/Profile/Profile';
 import MarketingManagerPage from '../Pages/MarketingManagerPage';
 import MarketingManager from '../component/MarketingManager/MarketingManager';
+import LogoutComponent from '../component/LogoutComponent';
+import Redirector from '../component/Redirector';
 
 const route = createBrowserRouter([
   {
@@ -43,7 +45,8 @@ const route = createBrowserRouter([
       { path: "/admin/student", element: <StudentAdminPage/> },
       { path: "/admin/faculty", element: <FacultyPage /> },
       { path: "/admin/term", element: <TermPage /> },
-      { path: "/admin/profile", element: <Profile />}
+      { path: "/admin/profile", element: <Profile />},
+      { path: "/admin/logout", element: <LogoutComponent/>}
     ]
   },
   {
@@ -99,11 +102,8 @@ const route = createBrowserRouter([
 
 ]);
 
-// const userRole = localStorage.getItem("userRole");
-// const redirectPath = getRedirectPath(userRole);
-
-// if (userRole && redirectPath) {
-//   route.navigate(redirectPath)
-// }
+const redirectPath = getRedirectPath();
+console.log("RedirectPath : " + redirectPath);
+route.navigate(redirectPath);
 
 export default route

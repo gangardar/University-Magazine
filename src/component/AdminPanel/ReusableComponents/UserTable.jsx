@@ -10,7 +10,6 @@ const UserTable = ({
   currentSelectState,
   filterRole
 }) => {
-  console.log(data);
   const isAdminOrMarketingManager = filterRole === 'ADMIN' || filterRole === 'MANAGER';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
@@ -38,6 +37,7 @@ const UserTable = ({
               <th>@</th>
               <th>ID</th>
               <th>Name</th>
+              <th>Email</th>
               <th>Role</th>
               {!isAdminOrMarketingManager && <th>Faculty</th>}
               <th>Action</th>
@@ -57,10 +57,12 @@ const UserTable = ({
                   </td>
                   <td>{item.id}</td>
                   <td>{item.name}</td>
+                  <td>{item.email}</td>
                   <td>{item.role}</td>
                   {!isAdminOrMarketingManager && <td>{item?.faculty?.name}</td>}
                   <td>
-                    <Button
+                    <div>
+                      <Button
                       className="mx-1"
                       variant="primary"
                       onClick={() => onUpdate(item.id)}
@@ -74,6 +76,8 @@ const UserTable = ({
                     >
                       Delete
                     </Button>
+                    </div>
+                    
                   </td>
                 </tr>
               ))
