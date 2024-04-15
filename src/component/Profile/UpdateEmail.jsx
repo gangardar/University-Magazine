@@ -1,24 +1,25 @@
 import { useState } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import useUpdatePassword from '../../services/Queries/User/useUpdatePassword';
-import endpointService from "../../services/mm-endpoint-service";
 import SuccessMessage from '../Feedback/SuccessMessage';
 import ErrorMessage from '../Feedback/ErrorMessage';
+import useUpdateEmail from '../../services/Queries/User/useUpdateEmail';
 
-function UpdatePassword({ id }) {
+function UpdateEmail({ user }) {
   const [show, setShow] = useState(false);
-  const { register, handleSubmit } = useForm();
+  const userData = user ? user : {};
+  const { register, handleSubmit } = useForm({defaultValues: {userData}});
 
-  const { mutateAsync: updatePassword, isError : isPasswordUpdateError,
-     isSuccess : isPasswordUpdateSuccess, error : passwordUpdateError } = useUpdatePassword();
+  const { mutateAsync: updateEmail, isError : isPasswordUpdateError,
+     isSuccess : isPasswordUpdateSuccess, error : passwordUpdateError } = useUpdateEmail();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const onSubmit = (data) => {
-    updatePassword({id, data}) 
-    
+    console.log(data);
+    const id = userData?.id;
+    updateEmail({data, id});
     handleClose();
   };
 
@@ -28,7 +29,7 @@ function UpdatePassword({ id }) {
     {isPasswordUpdateError && <ErrorMessage message={passwordUpdateError} />}
 
       <Button variant="primary" onClick={handleShow}>
-        Change Password
+        Change Email
       </Button>
 
       <Modal show={show} onHide={handleClose}>
@@ -37,21 +38,13 @@ function UpdatePassword({ id }) {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit(onSubmit)}>
-            <Form.Group className="mb-3" controlId="UpdatePasswordForm.ControlInput1">
-              <Form.Label>Current Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter your current password"
-                autoFocus
-                {...register('password', { required: 'Current password is required' })}
-              />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="UpdatePasswordForm.ControlInput2">
               <Form.Label>New Password</Form.Label>
               <Form.Control
-                type="password"
-                placeholder="Enter your new password"
-                {...register('newPassword', { required: 'New password is required' })}
+                type="email"
+                placeholder="Enter your new email"
+                {...register('email', { required: 'New Email is required' })}
+                defaultValue={userData?.email}
               />
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -64,4 +57,4 @@ function UpdatePassword({ id }) {
   );
 }
 
-export default UpdatePassword;
+export default UpdateEmail;

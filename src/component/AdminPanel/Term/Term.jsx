@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import TableComponent from '../ReusableComponents/TableComponent'
-import axios, { CanceledError } from 'axios'
 import TableSkeleton from '../ReusableComponents/TableSkeleton';
 import AddTerm from './AddTerm';
 import { formatDateToYYYYMMDD } from '../../dateUtil';
@@ -8,35 +7,42 @@ import endpointService from '../../../services/endpoint-term';
 import BulkDelete from '../ReusableComponents/BulkDelete';
 import { Container } from 'react-bootstrap';
 import UpdateTerm from './UpdateTerm';
+import useAcademic from '../../../services/Queries/Academic/useAcademic';
+import useAcademicUpdate from '../../../services/Queries/Academic/useAcademicUpdate';
+import useAddArticle from '../../../services/Queries/Academic/useAddAcademic';
+import ErrorMessage from '../../Feedback/ErrorMessage';
+import SuccessMessage from '../../Feedback/SuccessMessage';
+import useRemoveAcademic from '../../../services/Queries/Academic/useRemoveAcademic';
 
 const Term = () => {
   const [data, setData] = useState([]);
   const [selectState, setSelectState] = useState([]);
-  const [Error, setError] = useState();
-  const [loading, setLoading] = useState(true);
   const [selectedTermId, setSelectedTermId] = useState([]); 
 
   const [updateModalState, setUpdateModalState] = useState(false);
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
 
+  const {data : academicData, isLoading : isAcademicFetchLoading,
+     isAcademicFetchError, error : academicFetchError} = useAcademic();
+
+  const {mutateAsync : updateAcademic, isError : isAcademicUpdateError, 
+    isSuccess : isAcademicUpdateSuccess, error : academicUpdateError} = useAcademicUpdate();
+
+  
+  const {mutateAsync : createAcademic, isError : isAcademicAddError,
+     isSuccess : isAcademicAddSuccess, error : academicAddError} = useAddArticle();
+
+  const {mutateAsync: deleteAcademic, isError : isAcademicDeleteError,
+     isSuccess : isAcademicDeleteSuccess, error : academicDeleteError } = useRemoveAcademic();
+  
+
   useEffect(() => {
-    const {request,cancel} = endpointService.getAll();
-    request.then((res) => {
-      const reorderedData = res.data.sort((a, b) => a.id - b.id);
-      setData(res.data)
-      setLoading(false); 
-      console.log(res.data)
-    }).catch((err) => {
-      if (err instanceof CanceledError) return;
-      setError(err.message);
-      setLoading(false); 
-      console.log(Error);
-    })
+    const reorderedData = academicData?.sort((a, b) => a.id - b.id);
 
-    return () => cancel();
-  }, []);
+    setData(reorderedData);
+  }, [academicData]);
 
-  if (loading) {
+  if (isAcademicFetchLoading) {
     return <TableSkeleton columnCount={6}/>; 
   }
   const handleUpdateModalClose = () => {
@@ -55,7 +61,7 @@ const Term = () => {
 
   const onUpdate = (term) => {
     if (selectedTermId !== null) {
-        endpointService.update(selectedTermId, term)
+        updateAcademic({selectedTermId, term})
             .then(() => {
                 // Update the local state with the updated data
                 const updatedData = [...data];
@@ -64,13 +70,7 @@ const Term = () => {
                     updatedData[termIndex] = term;
                     setData(updatedData);
                 }
-            })
-            .catch((err) => {
-                if (err instanceof CanceledError) return;
-                setError(err.message);
-                console.log(err);
             });
-
         // Close the modal
         handleUpdateModalClose();
     }
@@ -87,8 +87,7 @@ const onDelete = (id) =>{
     const updatedData = data.filter((data) => data.id !== id);
     setData(updatedData);
 
-    endpointService.delete(id).catch((err) => {
-      setError(err.message);
+    deleteAcademic(id).catch(() => {
       setData(originalFaculties);
     })
   }    
@@ -123,21 +122,44 @@ const onDelete = (id) =>{
         }
     const newRow = { id: id, ...newTerm };
 
-    endpointService.create(newTerm)
-        .then((response) => {
+    createAcademic(newTerm)
+        .then(() => {
             setData([...data, newRow]);
         })
         .catch((err) => {
-            // Handle error
-            setError(err);
             setData(originalTerm);
         });
+  };
 
-      
-};
+  const handleBulkDelete = () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete selected Academy?');
+    if (confirmDelete) {
+      const originalData = [...data];
+      const deletedIds = [];
+      selectState.forEach((id) => {
+        deleteAcademic(id)
+          .then(() => {
+            deletedIds.push(id);
+            setData(prevData => prevData.filter(faculty => faculty.id !== id));
+          })
+          .catch(() => {
+            setData(originalData);
+          });
+      });
+      setSelectState([]);
+    }
+  };
+  
 
   return (
     <>
+    {isAcademicFetchError && <ErrorMessage message={academicFetchError} />}
+    {isAcademicAddSuccess && <SuccessMessage message={"New academic term added successfully!"} />}
+    {isAcademicAddError && <ErrorMessage message={academicAddError} />}
+    {isAcademicUpdateSuccess && <SuccessMessage message={"Academic term updated successfully!"} />}
+    {isAcademicUpdateError && <ErrorMessage message={academicUpdateError} />}
+    {isAcademicDeleteSuccess && <SuccessMessage message={"Academic term deleted successfully!"} />}
+    {isAcademicDeleteError && <ErrorMessage message={academicDeleteError} />}
     <Container className="mt-5 w-md-50">
     <UpdateTerm
           handleModalClose={handleUpdateModalClose}
@@ -146,7 +168,7 @@ const onDelete = (id) =>{
           termData={toUpdateFacultyData}
         />
       <div className='d-flex justify-content-end mb-3'>
-        <BulkDelete data={selectState}/>
+        <BulkDelete data={selectState} bulkDelete={handleBulkDelete}/>
         <AddTerm handleModalSubmit={handleModalSubmit} />
       </div>
 
