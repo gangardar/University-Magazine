@@ -22,13 +22,22 @@ import MarketingManagerPage from '../Pages/MarketingManagerPage';
 import MarketingManager from '../component/MarketingManager/MarketingManager';
 import LogoutComponent from '../component/LogoutComponent';
 import Redirector from '../component/Redirector';
+import GuestPage from '../Pages/GuestPage';
+import GuestLogin from '../component/Guest/GuestLogin';
+import ReportPage from '../Pages/Admin/ReportPage';
+import logout from '../component/logout';
+
+const handleError = (error) => {
+  if (error.status === 401) {
+    logout();
+  }
+}
 
 const route = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
     errorElement: <NotFound />,
-
   },
   {
     path: "/admin",
@@ -45,8 +54,21 @@ const route = createBrowserRouter([
       { path: "/admin/student", element: <StudentAdminPage/> },
       { path: "/admin/faculty", element: <FacultyPage /> },
       { path: "/admin/term", element: <TermPage /> },
+      { path: "/admin/analytics", element: <ReportPage/>},
       { path: "/admin/profile", element: <Profile />},
       { path: "/admin/logout", element: <LogoutComponent/>}
+    ]
+  },
+  {
+    path: "/guest",
+    element: <GuestPage/>,
+    errorElement: <NotFound />,
+    children : [
+      {
+        index : true,
+        path : "/guest",
+        element : <GuestLogin/>
+      }
     ]
   },
   {
@@ -97,10 +119,14 @@ const route = createBrowserRouter([
         path: "/marketingManager/home",
         element: <MarketingManager/>
       }
-    ]
+    ],   
   }
 
-]);
+],
+{
+  onError : handleError,
+}
+);
 
 const redirectPath = getRedirectPath();
 console.log("RedirectPath : " + redirectPath);

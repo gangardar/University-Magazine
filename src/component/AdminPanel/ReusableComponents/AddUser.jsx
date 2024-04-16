@@ -11,6 +11,11 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
     setModalState(!modalState);
    }
 
+   const onHandleModalSubmit = (data) => {
+      handleModalSubmit(data);
+      handleModalClose();
+   }
+
    const handleImageChange = (e) => {
     console.log(e);
   
@@ -34,7 +39,7 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
           {imagePreview && 
           <Image src={imagePreview} roundedCircle style={{ width: '20%', marginBottom: '10px' }} />}
 
-          <Form onSubmit={handleSubmit(handleModalSubmit)}>
+          <Form onSubmit={handleSubmit(onHandleModalSubmit)}>
           <Form.Group controlId="profile" className='my-2'>
             <Form.Label className="font-weight-bold">Profile Image</Form.Label>
             <Form.Control

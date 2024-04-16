@@ -5,10 +5,12 @@ import SuccessMessage from '../Feedback/SuccessMessage';
 import ErrorMessage from '../Feedback/ErrorMessage';
 import useUpdateEmail from '../../services/Queries/User/useUpdateEmail';
 
-function UpdateEmail({ user }) {
+function UpdateEmail({ user, refetchUser }) {
   const [show, setShow] = useState(false);
   const userData = user ? user : {};
-  const { register, handleSubmit } = useForm({defaultValues: {userData}});
+  const { register, handleSubmit } = useForm({defaultValues: {name : userData?.name,
+                                                            role : userData?.role,
+                                                            faculty: userData?.faculty?.id}});
 
   const { mutateAsync: updateEmail, isError : isPasswordUpdateError,
      isSuccess : isPasswordUpdateSuccess, error : passwordUpdateError } = useUpdateEmail();
@@ -19,13 +21,16 @@ function UpdateEmail({ user }) {
   const onSubmit = (data) => {
     console.log(data);
     const id = userData?.id;
-    updateEmail({data, id});
+    updateEmail({data, id}).then(()=>{
+      refetchUser();
+    })
+    
     handleClose();
   };
 
   return (
     <>
-    {isPasswordUpdateSuccess && <SuccessMessage message={"Password has been updated!"} />}
+    {isPasswordUpdateSuccess && <SuccessMessage message={"Email has been updated!"} />}
     {isPasswordUpdateError && <ErrorMessage message={passwordUpdateError} />}
 
       <Button variant="primary" onClick={handleShow}>
