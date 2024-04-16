@@ -83,8 +83,7 @@ function LoginForm() {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Text as={'a'}>Login as Guest!</Form.Text>
-                {/* <Link to={"/driver-register"}>Login as Guest!</Link> */}
+                <Link to={"/guest"}>Login as Guest!</Link>
               </Form.Group>
 
               <Col className="text-center">

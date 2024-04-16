@@ -16,7 +16,6 @@ import SuccessMessage from "../../Feedback/SuccessMessage";
 const UserController = ({Role}) => {
 
   const [data, setData] = useState([]); 
-  const [Error, setError] = useState();
   const[faculty, setFaculty] = useState([]);
 
   const [selectedState, setSelectedState] = useState([]);
@@ -26,10 +25,10 @@ const UserController = ({Role}) => {
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
 
   const { data: userData, isLoading: isUserFetchLoading,
-     isError: isUserFetchError, error : userFetchError } = useUser();
+     isError: isUserFetchError, error : userFetchError, refetch : refetchUser } = useUser();
 
   const { data: facultyData, isLoading: isFacultyFetchLoading,
-     isError: isFacultyFetchError, error : facultyFetchError } = useFaculty();
+     isError: isFacultyFetchError, error : facultyFetchError, refetch : refetchFaculty } = useFaculty();
 
   const {mutateAsync: updateUser, isError : isUserUpdateError,
      isSuccess : isUserUpdateSuccess, error : userUpdateError} = useUpdateUser();
@@ -99,9 +98,13 @@ const UserController = ({Role}) => {
   
           // Send formData to the server using fetch or axios
           updateUser({selectedFacultyId, faculty})
-          .then(
-            setData(updatedData)
-          )
+          .then(() => {
+            setData(updatedData);
+            refetchUser();
+          }                
+          ).catch(() => {
+            refetchUser();
+          })
       }
     }
     // Close the modal
@@ -114,10 +117,12 @@ const UserController = ({Role}) => {
     if (confirmDelete) {
       const updatedData = data?.filter((faculty) => faculty.id !== id);
       setData(updatedData);
-      deleteUser(id);
-      if(isUserDeleteError){
+      deleteUser(id).then(
+        refetchUser()
+      ).catch(() => {
         setData(originalUser);
-      }
+        refetchFaculty();
+      })
     }    
   };
   
@@ -135,9 +140,11 @@ const UserController = ({Role}) => {
             // Keep track of successfully deleted ids
             deletedIds.push(id);
             setData(prevData => prevData.filter(faculty => faculty.id !== id));
+            refetchUser();
           })
           .catch(() => {
             setData(originalData);
+            refetchUser();
           });
       });
       setSelectedState([]);
@@ -179,9 +186,12 @@ const UserController = ({Role}) => {
     };
     setData([...originalData, newUserWithId]);
     
-    createUser(newUser)
+    createUser(newUser).then(() =>{
+      refetchUser();
+    })
     .catch(() => {
       setData(originalData);
+      refetchUser();
     })
   };
 
@@ -191,11 +201,10 @@ const UserController = ({Role}) => {
     {isUserCreateSuccess && <SuccessMessage message={"User Added Successfully!"} />}
     {isUserCreateError && <ErrorMessage message={userCreateError} />}
     {isUserUpdateSuccess && <SuccessMessage message={"User Updated Successfully!"} />}
-    {isUserCreateError && <ErrorMessage message={userUpdateError} />}
+    {isUserUpdateError && <ErrorMessage message={userUpdateError} />}
     {isUserDeleteSuccess && <SuccessMessage message={"User Deleted Successfully!"} />}
     {isUserDeleteError && <ErrorMessage message={userDeleteError} />}
       <Container className="mt-5 w-md-50">
-        {Error && <ErrorMessage message={Error} />}
         <UpdateUser
           handleModalClose={handleUpdateModalClose}
           modalState={updateModalState}

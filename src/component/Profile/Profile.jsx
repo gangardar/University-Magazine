@@ -8,12 +8,13 @@ import UpdatePassword from './UpdatePassword';
 import LoadingSpinner from '../Feedback/LoadingSpinner';
 import UpdateEmail from './UpdateEmail';
 import ErrorMessage from '../Feedback/ErrorMessage';
+import logout from '../logout';
 
 const Profile = () => {
     const navigate = useNavigate();
     const userId = localStorage.getItem("userId");
     const { data: user, isLoading : isUserFetchLoading, 
-        isError : isUserFetchError, error : userFetchError } = useUserById(userId);
+        isError : isUserFetchError, error : userFetchError, refetch : refetchUser } = useUserById(userId);
 
     useEffect(() => {
         if(!userId){
@@ -25,6 +26,10 @@ const Profile = () => {
         const file = event.target.files[0];
         const data = new useForm();
     };
+
+    const handleLogout = () => {
+        logout();
+    }
 
     if (isUserFetchLoading) {
         return <LoadingSpinner message={"Loading your profile...."} />
@@ -63,7 +68,7 @@ const Profile = () => {
                                     style={{ display: 'none' }} 
                                 />
                             </div>
-                            <div className="p-3">
+                            <div className="p-3 text-start">
                                 <span className="font-weight-bold">Name:</span> {user?.name}<br />
                                 <span className="font-weight-bold">Email:</span> {user?.email}<br/>
                                 <span className="font-weight-bold">Role:</span> {user?.role}<br />
@@ -77,7 +82,12 @@ const Profile = () => {
                             <UpdatePassword id={userId}/>
                         </Row>
                         <Row className='m-2'>
-                            <UpdateEmail user={user} />
+                            <UpdateEmail user={user} refetchUser={refetchUser} />
+                        </Row>
+                        <Row className='mx-3'>
+                            <Button variant="danger" onClick={handleLogout}>
+                                Logout
+                            </Button>
                         </Row>
                         
                     </Col>

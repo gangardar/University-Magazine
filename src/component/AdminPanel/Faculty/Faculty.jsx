@@ -22,7 +22,7 @@ const Faculty = () => {
   const [toUpdateFacultyData , setToUpdateFacultyData] = useState(null);
 
   const {data : facultyData, isError : isFacultyFetchError,
-     isLoading : facultyFetchLoading, error : facultyFetchError} = useFaculty();
+     isLoading : facultyFetchLoading, error : facultyFetchError, refetch : refetchFaculty} = useFaculty();
 
   const {mutateAsync : createFaculty, isError : isFacultyCreateError,
      isSuccess: isFacultyCreateSuccess, error : facultyCreateError} = useAddFaculty();
@@ -77,7 +77,12 @@ const Faculty = () => {
         // Update the data with the new faculty information
         const updatedData = [...data];
         updatedData[facultyIndex] = { id: selectedFacultyId, name: faculty.name };
-        updateFaculty({faculty, selectedFacultyId});
+        updateFaculty({faculty, selectedFacultyId})
+        .then(() => {
+          setData(updatedData);
+          refetchFaculty();
+          handleUpdateModalClose();
+        });
         if(isFacultyUpdateSuccess){
           setData(updatedData);
         }
@@ -96,10 +101,14 @@ const Faculty = () => {
       const updatedData = data.filter((data) => data.id !== id);
       setData(updatedData);
 
-      deleteFaculty(id);
-      if(isFacultyDeleteError){
-        setData(originalFaculties);
-      }
+      deleteFaculty(id)
+      .then(() => {
+          refetchFaculty(); // Refetch after mutation is successful
+      }).catch(() => {
+        setData(originalFaculties); // Update data only after successful mutation
+        refetchFaculty();
+      })
+     
     }    
   }
 
@@ -112,6 +121,7 @@ const Faculty = () => {
         deleteFaculty(id)
           .then(() => {
             deletedIds.push(id);
+            refetchFaculty();
           })
           .catch((err) => {
             setData(originalData);
@@ -119,6 +129,7 @@ const Faculty = () => {
       });
       const updatedData = data.filter((faculty) => !deletedIds.includes(faculty.id));
       setData(updatedData);
+      refetchFaculty();
       setSelectedState([]); // Clear selected state
     }
   };
@@ -142,11 +153,12 @@ const Faculty = () => {
     const newRow = { id: id, name: faculty.name };
     setData((data) => [...data, newRow]);
     
-    createFaculty(faculty);
-    if(isFacultyCreateError){
+    createFaculty(faculty).then(() => {
+      refetchFaculty();
+    }).catch(() => {
       setData(originalFaculty);
-    }
-
+    })
+    
   };
   
   

@@ -16,7 +16,7 @@ const Layout = () => {
     <>
     <Container fluid>
     <Row>
-      <Col xs='auto' className="ps-0" >
+      <Col xs='auto' className="ps-0" style={{}} >
         <AdminSideBar />
       </Col>
       <Col xs={9} md={9} lg={9}>
