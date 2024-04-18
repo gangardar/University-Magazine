@@ -1,27 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Image, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
 const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, faculty, role }) => {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+  const [userData , setUserData] = useState();
 
-  useEffect(() => {
-    if (data && data.length > 0) {
-      const userData = data[0];
-      const { profilePhoto, ...userDataWithoutPhoto } = userData; // Destructure profilePhoto and userDataWithoutPhoto
-      reset({
-        ...userDataWithoutPhoto, // Spread the userDataWithoutPhoto object to set other fields
-        profilePhoto: profilePhoto || '', // Set profilePhoto if it exists, otherwise set it to an empty string
-      });
+  useEffect(()=>{
+    if(data & data?.length>0){
+      setUserData(data[0]);
     }
-  }, [data, reset]);
+  },[data]);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setValue('profilePhoto', file);
-    }
-  };
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+  // useEffect(() => {
+  //   if (data && data.length > 0) {
+  //     const userData = data[0];
+  //     const { profilePhoto, ...userDataWithoutPhoto } = userData; // Destructure profilePhoto and userDataWithoutPhoto
+  //     reset({
+  //       ...userDataWithoutPhoto, // Spread the userDataWithoutPhoto object to set other fields
+  //       profilePhoto: profilePhoto || '', // Set profilePhoto if it exists, otherwise set it to an empty string
+  //     });
+  //   }
+  // }, [data, reset]);
+
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setValue('profilePhoto', file);
+  //   }
+  // };
 
   return (
     <Modal show={modalState} onHide={handleModalClose} centered>
@@ -38,7 +46,7 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
                 <Form.Control
                   type="file"
                   accept="image/*"
-                  onChange={handleImageChange}
+                  // onChange={handleImageChange}
                   {...register("profilePhoto")}
                 />
                 <span className="text-danger">{errors.profilePhoto?.message}</span>
@@ -49,9 +57,22 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
                   type="text"
                   placeholder="Enter Updated Name"
                   {...register('name', { required: "Faculty's name is required!" })}
+                  defaultValue={data[0]?.name}
                 />
               </Form.Group>
-              <Form.Group controlId="role" style={{ display: data[0]?.role ? 'block' : 'none' }}>
+
+              <Form.Group controlId="email">
+              <Form.Label className="font-weight-bold">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter Email"
+                {...register("email", { required: "Email is required",  pattern: /^\S+@\S+$/i })}
+                defaultValue={data[0]?.email}
+              />
+              <span className="text-danger">{errors.email?.message}</span>
+            </Form.Group>
+
+              <Form.Group controlId="role" style={{ display: 'none'}}>
                 <Form.Label className="font-weight-bold">Role</Form.Label>
                 <Form.Control
                   as="select"
@@ -72,7 +93,7 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
                 <Form.Control
                   as="select"
                   {...register("faculty", { required: "Faculty ID is required" })}
-                  defaultValue={data[0]?.faculty.id || ""}
+                  defaultValue={data[0]?.faculty?.id || ""}
                 >
                   {faculty.length !== 0 &&
                     faculty.map((facultyData) => (
@@ -82,9 +103,6 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
                     ))}
                 </Form.Control>
                 <span className="text-danger">{errors.faculty?.message}</span>
-                {data[0]?.faculty && ( // Show faculty ID below the select box if faculty exists
-                  <p>Faculty: {data[0].faculty.id}</p>
-                )}
               </Form.Group>
               
               

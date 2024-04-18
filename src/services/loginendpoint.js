@@ -14,6 +14,12 @@ class LoginEndPoint{
         localStorage.setItem("token", userData.token);
     }
 
+    clearUserData() {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("token");
+    }
+
 }
 
 export default new LoginEndPoint();

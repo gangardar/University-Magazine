@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://university-magazine-backend.onrender.com/api/v1"
+  baseURL: "https://university-magazine-backend.onrender.com/api/v1",
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
 });
 
 axiosInstance.interceptors.request.use(
@@ -12,6 +15,11 @@ axiosInstance.interceptors.request.use(
       const token = `Bearer ${apiToken}`;
       config.headers["Authorization"] = token;
     }
+
+    if (config.data instanceof FormData) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
     return config;
   },
   (error) => {
@@ -36,12 +44,16 @@ class APIClient {
     return axiosInstance.post(this.endpoint + `/add`, data).then((res) => res.data);
   }
 
-  update(id, data) {
-    return axiosInstance.put(`${this.endpoint}/${id}`, data).then((res) => res.data);
+  update(data, id) {
+    return axiosInstance.post(`${this.endpoint}/${id}`, data).then((res) => res.data);
   }
 
   suspend(id) {
-    return axiosInstance.post(`${this.endpoint}/${id}`).then((res) => res.data);
+    return axiosInstance.delete(`${this.endpoint}/${id}`).then((res) => res.data);
+  }
+
+  login(data){
+    return axiosInstance.post(this.endpoint, data).then((res) => res.data);
   }
 }
 

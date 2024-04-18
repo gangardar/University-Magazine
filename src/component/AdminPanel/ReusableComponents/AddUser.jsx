@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Form, Image, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Form, Image, Modal} from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
 export default function AddUser({handleModalSubmit, Role, faculty}) {
@@ -9,6 +9,11 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
 
    const handleModalClose= () => {
     setModalState(!modalState);
+   }
+
+   const onHandleModalSubmit = (data) => {
+      handleModalSubmit(data);
+      handleModalClose();
    }
 
    const handleImageChange = (e) => {
@@ -34,7 +39,7 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
           {imagePreview && 
           <Image src={imagePreview} roundedCircle style={{ width: '20%', marginBottom: '10px' }} />}
 
-          <Form onSubmit={handleSubmit(handleModalSubmit)}>
+          <Form onSubmit={handleSubmit(onHandleModalSubmit)}>
           <Form.Group controlId="profile" className='my-2'>
             <Form.Label className="font-weight-bold">Profile Image</Form.Label>
             <Form.Control
@@ -49,12 +54,21 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
             <Form.Group controlId="name">
               <Form.Label className="font-weight-bold">Name</Form.Label>
               <Form.Control
-                onChange={handleImageChange}
                 type="text"
                 placeholder="Enter Name"
                 {...register("name", { required: "Name is required" })}
               />
               <span className="text-danger">{errors.name?.message}</span>
+            </Form.Group>
+
+            <Form.Group controlId="email">
+              <Form.Label className="font-weight-bold">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter Email"
+                {...register("email", { required: "Email is required",  pattern: /^\S+@\S+$/i })}
+              />
+              <span className="text-danger">{errors.email?.message}</span>
             </Form.Group>
 
             <Form.Group controlId="password">
@@ -67,7 +81,7 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
               <span className="text-danger">{errors.password?.message}</span>
             </Form.Group>
 
-            <Form.Group controlId="role" style={{ display: Role ? 'block' : 'none' }}>
+            <Form.Group controlId="role" style={{ display : 'none' }}>
               <Form.Label className="font-weight-bold">Role</Form.Label>
               <Form.Control
                 as="select"

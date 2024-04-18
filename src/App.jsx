@@ -1,12 +1,13 @@
-import { BrowserRouter as Router, RouterProvider } from 'react-router-dom';
+import {RouterProvider } from 'react-router-dom';
 import route from './routes/route';
-import { QueryClientProvider, useQueryClient } from 'react-query';
+import Redirector from './component/Redirector';
 
 
 function App() {
 
   return (
-        <RouterProvider router={route} />   
+    
+        <RouterProvider router={route} />
         
   );
 }

@@ -1,6 +1,7 @@
 export function getRedirectPath() {
   const role = localStorage.getItem("userRole");
-    switch (role) {
+  const userRole = role ? role : '';
+    switch (userRole) {
       case "ADMIN":
         return "/admin";
       case "STUDENT":

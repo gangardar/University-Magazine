@@ -8,7 +8,7 @@ import MarketingMaPage from '../Pages/Admin/MarketingMaPage';
 import StudentPage from '../Pages/StudentPage';
 import FacultyPage from '../Pages/Admin/FacultyPage';
 import PrototypeTable from '../component/Prototype/PrototypeTable';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, useNavigate } from 'react-router-dom';
 import Home from '../component/Student/pages/Home/Home';
 import Submit from '../component/Student/pages/Submit/Submit';
 import ArticleDetail from '../component/Student/pages/Detail/ArticleDetail';
@@ -16,17 +16,19 @@ import StudentAdminPage from '../Pages/Admin/StudentAdminPage';
 import TermPage from '../Pages/Admin/TermPage';
 import MarketingCoordinatorPage from '../Pages/MarketingCoordinatorPage';
 import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCoHome';
-import { getRedirectPath } from '../component/getRedirectPath';
 import Profile from '../component/Profile/Profile';
 import MarketingManagerPage from '../Pages/MarketingManagerPage';
 import MarketingManager from '../component/MarketingManager/MarketingManager';
+import LogoutComponent from '../component/LogoutComponent';
+import GuestPage from '../Pages/GuestPage';
+import GuestLogin from '../component/Guest/GuestLogin';
+import ReportPage from '../Pages/Admin/ReportPage';
 
 const route = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
     errorElement: <NotFound />,
-
   },
   {
     path: "/admin",
@@ -43,7 +45,26 @@ const route = createBrowserRouter([
       { path: "/admin/student", element: <StudentAdminPage/> },
       { path: "/admin/faculty", element: <FacultyPage /> },
       { path: "/admin/term", element: <TermPage /> },
-      { path: "/admin/profile", element: <Profile />}
+      { path: "/admin/analytics", element: <ReportPage/>},
+      { path: "/admin/profile", element: <Profile />},
+      { path: "/admin/logout", element: <LogoutComponent/>}
+    ]
+  },
+  {
+    path: "/logout",
+    element: <LogoutComponent/>,
+    errorElement: <NotFound/>
+  },
+  {
+    path: "/guest",
+    element: <GuestPage/>,
+    errorElement: <NotFound />,
+    children : [
+      {
+        index : true,
+        path : "/guest",
+        element : <GuestLogin/>
+      }
     ]
   },
   {
@@ -94,16 +115,10 @@ const route = createBrowserRouter([
         path: "/marketingManager/home",
         element: <MarketingManager/>
       }
-    ]
+    ],   
   }
 
-]);
-
-// const userRole = localStorage.getItem("userRole");
-// const redirectPath = getRedirectPath(userRole);
-
-// if (userRole && redirectPath) {
-//   route.navigate(redirectPath)
-// }
+],
+);
 
 export default route

@@ -3,7 +3,7 @@ import { Button, Form, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-
 import { useForm } from 'react-hook-form';
 
 const UpdateFaculty = ({ handleModalClose, modalState, handleModalSubmit, facultyData }) => {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, setValue, formState: { errors, isDirty } } = useForm();
 
   useEffect(() => {
     reset({
@@ -28,7 +28,7 @@ const UpdateFaculty = ({ handleModalClose, modalState, handleModalSubmit, facult
               />
             </Form.Group>            
             <ModalFooter>
-              <Button type='submit' variant='success'>
+              <Button type='submit' variant='success' disabled={!isDirty}>
                 Submit
               </Button>
               <Button onClick={handleModalClose} variant='danger'>

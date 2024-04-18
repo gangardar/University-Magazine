@@ -52,7 +52,7 @@ const AdminSideBar = () => {
               <CDBSidebarMenuItem icon="chart-line">Analytics</CDBSidebarMenuItem>
             </NavLink>
 
-            <NavLink  to="/logout"  >
+            <NavLink  to="/admin/logout"  >
               <CDBSidebarMenuItem icon="user-circle">Logout</CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>          
