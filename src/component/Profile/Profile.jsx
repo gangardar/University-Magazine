@@ -8,7 +8,6 @@ import UpdatePassword from './UpdatePassword';
 import LoadingSpinner from '../Feedback/LoadingSpinner';
 import UpdateEmail from './UpdateEmail';
 import ErrorMessage from '../Feedback/ErrorMessage';
-import logout from '../logout';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -28,7 +27,7 @@ const Profile = () => {
     };
 
     const handleLogout = () => {
-        logout();
+        navigate('/logout')
     }
 
     if (isUserFetchLoading) {

@@ -6,6 +6,7 @@ import Redirector from './component/Redirector';
 function App() {
 
   return (
+    
         <RouterProvider router={route} />
         
   );

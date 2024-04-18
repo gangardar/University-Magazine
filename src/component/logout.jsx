@@ -1,4 +1,3 @@
-// logout.js
 import { useEffect } from 'react';
 import useLogout from "../services/Queries/Auth/useLogout";
 import loginendpoint from '../services/loginendpoint';
@@ -28,6 +27,8 @@ const logout = () => {
 
     handleLogout();
   }, [refetch, navigate]);
+
+  return null;
 };
 
 export default logout;

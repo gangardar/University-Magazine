@@ -1,10 +1,26 @@
-import Chart from 'chart.js/auto';
-import React, { useRef, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { Bar } from 'react-chartjs-2';
 import ReportBarChart from './ReportBarChart';
+import ActiveUserList from './ActiveUserList';
 
 const Report = () => {
+
+
+  const userList = [
+    { name: "Admin", logins: 4 },
+    { name: "Manager Hla", logins: 0 },
+    { name: "Manager Aung", logins: 0 },
+    { name: "Cor Htun", logins: 0 },
+    { name: "Cor Aye", logins: 0 },
+    { name: "Cor Mya", logins: 0 },
+    { name: "HtetWaiAung", logins: 2 },
+    { name: "GanGarDar", logins: 0 },
+    { name: "ZarZarSoe", logins: 0 },
+    { name: "ThawDarLattYar", logins: 0 },
+    { name: "AkarMinKhant", logins: 0 },
+    { name: "PaingPhyoAung", logins: 0 },
+    { name: "MiKoKo", logins: 0 },
+    { name: "MayMyatThaw", logins: 1 }
+  ];
 
   return (
     <Container className="mt-4">
@@ -13,23 +29,8 @@ const Report = () => {
         <Col md={6}>
           <Card>
             <Card.Body>
-              <Card.Title>User Report</Card.Title>
-              <ul>
-                <li>Admin: 4 logins</li>
-                <li>Manager Hla: 0 logins</li>
-                <li>Manager Aung: 0 logins</li>
-                <li>Cor Htun: 0 logins</li>
-                <li>Cor Aye: 0 logins</li>
-                <li>Cor Mya: 0 logins</li>
-                <li>HtetWaiAung: 0 logins</li>
-                <li>GanGarDar: 0 logins</li>
-                <li>ZarZarSoe: 0 logins</li>
-                <li>ThawDarLattYar: 0 logins</li>
-                <li>AkarMinKhant: 0 logins</li>
-                <li>PaingPhyoAung: 0 logins</li>
-                <li>MiKoKo: 0 logins</li>
-                <li>MayMyatThaw: 0 logins</li>
-              </ul>
+              <Card.Title>Most Active User</Card.Title>
+              <ActiveUserList data={userList} maxItemsToShow={5} />
             </Card.Body>
           </Card>
         </Col>
@@ -53,7 +54,7 @@ const Report = () => {
         <Col>
           <Card>
             <Card.Body>
-              <Card.Title>Faculty Report</Card.Title>
+              <Card.Title>Faculty & Articles</Card.Title>
               {/* Bar chart */}
               <ReportBarChart />
             </Card.Body>
