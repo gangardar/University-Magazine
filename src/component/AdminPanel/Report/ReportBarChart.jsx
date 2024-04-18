@@ -1,59 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js/auto';
+import useReportFaculty from '../../../services/Queries/Report/useReportFaculty';
 
 const ReportBarChart = () => {
   const chartRef = useRef(null);
 
-  const facultyData = [
-    {
-      "facultyId": 1,
-      "facultyName": "Computer Science",
-      "totalUsers": 4,
-      "totalArticles": 2
-    },
-    {
-      "facultyId": 2,
-      "facultyName": "Physics",
-      "totalUsers": 4,
-      "totalArticles": 2
-    },
-    {
-      "facultyId": 3,
-      "facultyName": "Engineering",
-      "totalUsers": 3,
-      "totalArticles": 2
-    },
-    {
-      "facultyId": 4,
-      "facultyName": "Biology",
-      "totalUsers": 0,
-      "totalArticles": 0
-    },
-    {
-      "facultyId": 5,
-      "facultyName": "Art",
-      "totalUsers": 0,
-      "totalArticles": 0
-    },
-    {
-      "facultyId": 6,
-      "facultyName": "Mathematics",
-      "totalUsers": 0,
-      "totalArticles": 0
-    },
-    {
-      "facultyId": 7,
-      "facultyName": "Physicsd",
-      "totalUsers": 0,
-      "totalArticles": 0
-    },
-    {
-      "facultyId": 8,
-      "facultyName": "social",
-      "totalUsers": 0,
-      "totalArticles": 0
-    }
-  ];
+  const {data : facultyDataX} = useReportFaculty();
+
+  const facultyData = facultyDataX ? facultyDataX : [{}];
+
 
   const facultyNames = facultyData.map(item => item.facultyName);
   const totalArticlesData = facultyData.map(item => item.totalArticles);

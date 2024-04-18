@@ -16,22 +16,13 @@ import StudentAdminPage from '../Pages/Admin/StudentAdminPage';
 import TermPage from '../Pages/Admin/TermPage';
 import MarketingCoordinatorPage from '../Pages/MarketingCoordinatorPage';
 import MarketingCoHome from '../component/MarketingCoordinator/pages/MarketingCoHome';
-import { getRedirectPath } from '../component/getRedirectPath';
 import Profile from '../component/Profile/Profile';
 import MarketingManagerPage from '../Pages/MarketingManagerPage';
 import MarketingManager from '../component/MarketingManager/MarketingManager';
 import LogoutComponent from '../component/LogoutComponent';
-import Redirector from '../component/Redirector';
 import GuestPage from '../Pages/GuestPage';
 import GuestLogin from '../component/Guest/GuestLogin';
 import ReportPage from '../Pages/Admin/ReportPage';
-import logout from '../component/logout';
-
-const handleError = (error) => {
-  if (error.status === 401) {
-    logout();
-  }
-}
 
 const route = createBrowserRouter([
   {
@@ -58,6 +49,11 @@ const route = createBrowserRouter([
       { path: "/admin/profile", element: <Profile />},
       { path: "/admin/logout", element: <LogoutComponent/>}
     ]
+  },
+  {
+    path: "/logout",
+    element: <LogoutComponent/>,
+    errorElement: <NotFound/>
   },
   {
     path: "/guest",
@@ -123,13 +119,6 @@ const route = createBrowserRouter([
   }
 
 ],
-{
-  onError : handleError,
-}
 );
-
-const redirectPath = getRedirectPath();
-console.log("RedirectPath : " + redirectPath);
-route.navigate(redirectPath);
 
 export default route
