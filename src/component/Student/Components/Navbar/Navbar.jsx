@@ -9,6 +9,9 @@ import user from '../../../../assets/user.png';
 const Navbar = ({ data, status }) => {
     const location = useLocation();
 
+    const userName = localStorage.getItem("userName")
+    const role = localStorage.getItem("userRole")
+
     return (
 
         <div style={{ width: '100%' }}>
@@ -88,11 +91,14 @@ const Navbar = ({ data, status }) => {
                     </div>
 
                     <img src={notification} alt="" style={{ width: '20px', height: '20px', marginLeft: '20px', marginRight: '16px', cursor: 'pointer' }} />
+                    <div>
                     <img src={user} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} />
-
+                    {/* <div style={{zIndex:'1', position: 'absolute', backgroundColor:'lightgray', width:'80px', marginTop:'10px', justifyContent:'center', alignContent:'center', textAlign:'center', fontSize:'14px', height:'30px'}}>Logout</div> */}
+                    </div>
+                    
                     <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center', marginLeft: '16px', marginRight: '25px' }}>
-                        <label style={{ fontFamily: 'serif', fontSize: '14px' }}>John Doe</label>
-                        <label style={{ fontFamily: 'serif', fontSize: '14px' }}>Student</label>
+                        <label style={{ fontFamily: 'serif', fontSize: '14px' }}>{userName}</label>
+                        <label style={{ fontFamily: 'serif', fontSize: '14px' }}>{role}</label>
                     </div>
                 </div>
             </div>

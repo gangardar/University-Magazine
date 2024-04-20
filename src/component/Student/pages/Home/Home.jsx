@@ -14,9 +14,15 @@ const Home = () => {
   const [academicYear, setAcademicYear] = useState([]);
 
   const navigate = useNavigate();
+  
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
-    axios.get('https://university-magazine-backend.onrender.com/api/v1/article')
+    axios.get('https://university-magazine-backend.onrender.com/api/v1/article', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         console.log('Response:', response.data);
         setData(response.data);
@@ -28,20 +34,25 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('https://university-magazine-backend.onrender.com/api/v1/academic-year')
-        .then(response => {
-            console.log('Response academicYear ==========> ', response.data);
-            setAcademicYear(response.data);
-        })
-        .catch(error => {
-            setError(error)
-            console.error('Error:', error);
-        });
-}, []);
+    axios.get('https://university-magazine-backend.onrender.com/api/v1/academic-year', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        console.log('Response academicYear ==========> ', response.data);
+        setAcademicYear(response.data);
+      })
+      .catch(error => {
+        setError(error)
+        console.error('Error:', error);
+      });
+  }, []);
 
   const handleCardClick = (item) => {
     console.log("Clicked item data:", item);
-    navigate('/student/articleDetail', {state: {item: item}})
+    navigate('/student/articleDetail', { state: { item: { ...item, type: 'student' } } });
+    // navigate('/student/articleDetail', { state: { item: item } })
   };
 
   return (
@@ -50,13 +61,13 @@ const Home = () => {
       {!error ? (
         <div className="home-container">
           <div className="home">
-            <Dropdown academicYearData={academicYear}/>
+            <Dropdown academicYearData={academicYear} />
             {data != null ? <ArticleCard data={data} onCardClick={handleCardClick} /> : null}
           </div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', justifyContent: 'center' }}>
-           <img src={AlertError} alt='' style={{ width:'45px', height:'45px', marginBottom:'10px'}} />
+          <img src={AlertError} alt='' style={{ width: '45px', height: '45px', marginBottom: '10px' }} />
           <h5>Something went wrong</h5>
           <label>There was a problem processing the request. Please reload the page.</label>
         </div>

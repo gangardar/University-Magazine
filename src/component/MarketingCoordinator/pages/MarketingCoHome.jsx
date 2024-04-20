@@ -17,6 +17,7 @@ const MarketingCoHome = () => {
     const [academicYear, setAcademicYear] = useState([]);
 
     const navigate = useNavigate();
+    const token = localStorage.getItem("token")
 
     const handleBackward = () => {
         if (startIndex > 0) {
@@ -37,7 +38,11 @@ const MarketingCoHome = () => {
     };
 
     useEffect(() => {
-        axios.get('https://university-magazine-backend.onrender.com/api/v1/academic-year')
+        axios.get('https://university-magazine-backend.onrender.com/api/v1/academic-year', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 console.log('Response academicYear ==========> ', response.data);
                 setAcademicYear(response.data);
@@ -51,7 +56,11 @@ const MarketingCoHome = () => {
     const handleViewRefresh = (item) => {
         console.log("Clicked item data:", item);
         if (item) {
-            axios.get('https://university-magazine-backend.onrender.com/api/v1/article')
+            axios.get('https://university-magazine-backend.onrender.com/api/v1/article', {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              })
                 .then(response => {
                     console.log('Response Article ==========> ', response.data);
                     setArticle(response.data);
@@ -65,7 +74,11 @@ const MarketingCoHome = () => {
 
     const handleFacultyClick = (item) => {
         console.log("Clicked faculty:", item);
-        axios.get(`https://university-magazine-backend.onrender.com/api/v1/article/byFaculty/${item.id}`)
+        axios.get(`https://university-magazine-backend.onrender.com/api/v1/article/byFaculty/${item.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 console.log('Response Article By Faculty ==========> ', response.data);
                 setArticle(response.data);
@@ -77,7 +90,11 @@ const MarketingCoHome = () => {
     };
 
     useEffect(() => {
-        axios.get('https://university-magazine-backend.onrender.com/api/v1/faculty')
+        axios.get('https://university-magazine-backend.onrender.com/api/v1/faculty', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 console.log('Response Faculty:', response.data);
                 setFaculty(response.data);
@@ -89,7 +106,11 @@ const MarketingCoHome = () => {
     }, []);
 
     useEffect(() => {
-        axios.get('https://university-magazine-backend.onrender.com/api/v1/article')
+        axios.get('https://university-magazine-backend.onrender.com/api/v1/article', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 console.log('Response Article ==========> ', response.data);
                 setArticle(response.data);
@@ -103,27 +124,6 @@ const MarketingCoHome = () => {
     return (
         <div>
             <Navbar data={"marketingCoHome"} />
-
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: '16px', width: '100%' }}>
-
-                <div style={{ marginRight: '30px' }}>
-                    <img src={backIcon} alt='' style={{ width: '35px', height: '35px', cursor: 'pointer' }} onClick={handleBackward} />
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    {faculty.slice(startIndex, startIndex + 5).map((item, index) => (
-                        <div key={index} style={{ width: '135px', height: '100px', borderWidth: '1px', borderRadius: '5px', marginRight: '12px', marginLeft: '12px', borderColor: '#D9D9D9', borderStyle: 'solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontSize: '14px', width: '80px', height: '65px', backgroundColor: '#D9D9D9', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', }} onClick={() => handleFacultyClick(item)}>
-                                {item.name}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div style={{ marginLeft: '30px' }}>
-                    <img src={forwardIcon} alt='' style={{ width: '28px', height: '28px', cursor: 'pointer' }} onClick={handleForward} />
-                </div>
-            </div>
 
             <div style={{ width: '100%', alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
                 <Dropdown status={"marketingCoHome"} academicYearData={academicYear} />

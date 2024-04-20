@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Col, Container, Form, Image, Row } from 'react-bootstrap';
 import logo from '../assets/greenwich_green_logo.png';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,14 @@ import LoadingSpinner from './Feedback/LoadingSpinner';
 function LoginForm() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const usertoken = localStorage.getItem("token");
+    if(usertoken){
+      const path = getRedirectPath();
+      navigate(path);
+    }
+  },[])
   
   // Using useLogin hook
   const { mutateAsync, isLoading, isError, error, data } = useLogin();
@@ -83,7 +91,7 @@ function LoginForm() {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Link to={"/guest"}>Login as Guest!</Link>
+                <Link to={"/guest-login"}>Login as Guest!</Link>
               </Form.Group>
 
               <Col className="text-center">

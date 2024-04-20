@@ -19,7 +19,7 @@ const AdminSideBar = () => {
         <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a
-            href="/"
+            href="/admin"
             className="text-decoration-none"
             style={{ color: 'inherit' }}
           >
@@ -44,6 +44,9 @@ const AdminSideBar = () => {
             </NavLink>
             <NavLink  to="/admin/student" >
               <CDBSidebarMenuItem icon="users">Student</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink to="/admin/guest">
+              <CDBSidebarMenuItem icon="passport">Guest</CDBSidebarMenuItem>
             </NavLink>
             <NavLink  to="/admin/term" >
               <CDBSidebarMenuItem icon="business-time">Terms</CDBSidebarMenuItem>

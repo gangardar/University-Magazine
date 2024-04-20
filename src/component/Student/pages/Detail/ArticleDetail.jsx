@@ -6,33 +6,126 @@ import ArticleImage from '../../../../assets/image.png'
 import ThreeDotSvg from '../../../../assets/three_dots.svg';
 import ThreeDotVerticalSvg from '../../../../assets/three_dot_vertical.svg';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
 
 const ArticleDetail = () => {
+
+    // const [item, setItem] = useState([]);
     const location = useLocation();
-    const item = location.state ? location.state.item : null;
+    // const item = location.state ? location.state.item : null;
+    const [item, setItem] = useState(location.state ? location.state.item : null);
     const [inputComment, setInputComment] = useState('');
     const [showDelete, setShowDelete] = useState(false);
-
+    const [commentIndex, setCommentIndex] = useState(-1);
+    const token = localStorage.getItem("token")
     const [comment, setComment] = useState([]);
     const [error, setError] = useState(null);
+    const userName = localStorage.getItem("userName")
+    const userId = localStorage.getItem("userId")
 
-    const handleRejectClick = (article_id) => {
-        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/reject/${article_id}`)
+    const handleThreeDotClick = (showDelete, index) => {
+        setCommentIndex(index)
+        setShowDelete(showDelete)
+
+    };
+
+    console.log("Token : ", token)
+    console.log("item ============= ", item)
+
+    // useEffect(() => {
+    //     console.log("Refresh Test ", argsData.id)
+    //     axios.get(`https://university-magazine-backend.onrender.com/api/v1/article/${argsData.id}`, {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     })
+    //         .then(response => {
+    //             console.log('Response Article:', response.data);
+    //             setItem(response.data);
+    //         })
+    //         .catch(error => {
+    //             setError(error)
+    //         });
+    // }, []);
+
+    const handleDeleteClick = () => {
+        axios.delete(`https://university-magazine-backend.onrender.com/api/v1/comment/${commentIndex}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
-                console.log('Response Reject:', response.data);
-                item.copy(approveStatus = "Rejected")
+                setShowDelete(!showDelete)
+                console.log('Response Comment delete :', response.data);
+                axios.get(`https://university-magazine-backend.onrender.com/api/v1/comment/${item.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                    .then(response => {
+                        setComment(response.data);
+                    })
+                    .catch(error => {
+                        setError(error)
+                        console.error('Error:', error);
+                    });
             })
             .catch(error => {
+                setShowDelete(!showDelete)
                 setError(error)
+                console.error('Error:', error);
+            });
+
+    }
+
+    const handleRejectClick = (article_id) => {
+        axios.post(
+            `https://university-magazine-backend.onrender.com/api/v1/article/reject/${article_id}`,
+            null,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+            .then(response => {
+                console.log('Response Reject:', response.data);
+                axios.get(`https://university-magazine-backend.onrender.com/api/v1/article/${article_id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                    .then(response => {
+                        console.log('Response Article:', response.data);
+                        setItem(prevItem => ({
+                            ...prevItem,
+                            approveStatus: "REJECTED"
+                        }));
+                    })
+                    .catch(error => {
+                        setError(error)
+                        console.error('Error:', error);
+                    });
+            })
+            .catch(error => {
+                setError(error);
                 console.error('Error:', error);
             });
     };
 
     const handleAcceptClick = (article_id) => {
-        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/approve/${article_id}`)
+        console.log("ArticleId : ", article_id)
+        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/approve/${article_id}`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 console.log('Response Approve:', response.data);
-                item.copy(approveStatus = "Approved")
+                setItem(prevItem => ({
+                    ...prevItem,
+                    approveStatus: "APPROVED"
+                }));
             })
             .catch(error => {
                 setError(error)
@@ -45,13 +138,17 @@ const ArticleDetail = () => {
     };
 
     useEffect(() => {
-        axios.get(`https://university-magazine-backend.onrender.com/api/v1/comment/${item.id}`)
+        axios.get(`https://university-magazine-backend.onrender.com/api/v1/comment/${item.id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
+                console.log("Response Comments : ", response.data)
                 setComment(response.data);
             })
             .catch(error => {
                 setError(error)
-                console.error('Error:', error);
             });
     }, []);
 
@@ -62,7 +159,7 @@ const ArticleDetail = () => {
             try {
                 const formData = new FormData();
                 formData.append('articleId', data.id);
-                formData.append('userId', data.user.id);
+                formData.append('userId', userId);
                 formData.append('comment', inputComment);
 
                 console.log("formData =====> ", formData);
@@ -73,11 +170,16 @@ const ArticleDetail = () => {
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${token}`
                         },
                     }
                 );
                 setInputComment('')
-                axios.get(`https://university-magazine-backend.onrender.com/api/v1/comment/${item.id}`)
+                axios.get(`https://university-magazine-backend.onrender.com/api/v1/comment/${item.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                     .then(response => {
                         setComment(response.data);
                     })
@@ -110,8 +212,11 @@ const ArticleDetail = () => {
                 <div style={{ display: 'flex', width: '49%', paddingRight: '2%', }}>
                     <div style={{ width: '100%', marginTop: '0px', justifyContent: "center", alignItems: 'center' }}>
                         <img src={item.coverPhoto} alt="" style={{ width: '70%', marginLeft: '30%', height: '320px' }} onClick={() => {
-                            window.open('https://university-magazine-backend.onrender.com/api/v1/article/file/download/2');
+                            
                         }} />
+                        <div style={{width:'100%', display:'flex', justifyContent:'end', marginTop:'5px'}}>
+                        <Button variant="primary" size="sm" onClick={() => window.open(item.file) }>Download</Button>
+                        </div>
                     </div>
                 </div>
 
@@ -133,19 +238,36 @@ const ArticleDetail = () => {
                         {/* <div style={{ width: '100%', height: '1px', backgroundColor: 'lightgray' }}></div> */}
                     </div>
 
-                    <div style={{ marginTop: '12px', marginBottom: '16px' }}>
-                        <h6 style={{ marginLeft: '10px' }}>{item.title}</h6>
-                        {item.approveStatus == "APPROVED" ? (
-                            <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
-                        ) : item.approveStatus == "REJECTED" ? (
-                            <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Rejected</label>
-                        ) : (
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleRejectClick(item.id)}>Reject</label>
-                                <label style={{ backgroundColor: 'green', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleAcceptClick(item.id)} >Approve</label>
+
+                    {
+                        item.type != "student" ? (
+                            <div style={{ marginTop: '12px', marginBottom: '16px' }}>
+                                <h6 style={{ marginLeft: '10px' }}>{item.title}</h6>
+                                {item.approveStatus == "APPROVED" ? (
+                                    <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
+                                ) : item.approveStatus == "REJECTED" ? (
+                                    <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Rejected</label>
+                                ) : (
+                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                        <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleRejectClick(item.id)}>Reject</label>
+                                        <label style={{ backgroundColor: 'green', color: 'white', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '12px', fontFamily: 'sans-serif' }} onClick={() => handleAcceptClick(item.id)} >Approve</label>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
+                        ) : (
+                            <div style={{ marginTop: '12px', marginBottom: '16px' }}>
+                                <h6 style={{ marginLeft: '10px' }}>{item.title}</h6>
+                                {item.approveStatus == "APPROVED" ? (
+                                    <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
+                                ) : item.approveStatus == "REJECTED" ? (
+                                    <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Rejected</label>
+                                ) : (
+                                    <label style={{ backgroundColor: 'lightgray', color: 'black', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Pending</label>
+                                )}
+                            </div>
+                        )
+                    }
+
 
                     <div style={{ width: '100%', height: '1px', backgroundColor: 'lightgray' }}></div>
 
@@ -160,15 +282,16 @@ const ArticleDetail = () => {
                                             <span style={{ fontFamily: 'sans-serif', fontSize: '10px', fontWeight: 'normal', color: 'gray', marginTop: '0px' }}>{commentItem.createdAt ? formatDate(commentItem.createdAt) : ''}</span>
                                         </div>
                                         {
-                                            showDelete ? (
+                                            showDelete && commentIndex == commentItem.id ? (
                                                 <div style={{ marginLeft: '0px' }}>
-                                                    <div style={{ backgroundColor: "#f5f5f5", padding: '4px 8px', fontSize: '11px', zIndex: '1', cursor: 'pointer', position: 'absolute', marginLeft: '30px', marginTop: '12px' }} onClick={() => null}>delete</div>
+                                                    <div style={{ backgroundColor: "#f5f5f5", padding: '4px 8px', fontSize: '11px', zIndex: '1', cursor: 'pointer', position: 'absolute', marginLeft: '30px', marginTop: '12px' }} onClick={() => handleDeleteClick()}>delete</div>
                                                 </div>
                                             ) : null
                                         }
 
                                         <div style={{ display: 'flex', justifyContent: 'flex-start', marginLeft: '32px', flexDirection: 'column' }}>
-                                            <img src={ThreeDotVerticalSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} onClick={() => setShowDelete(!showDelete)} />
+                                            {/* <img src={ThreeDotVerticalSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} onClick={() => { setCommentIndex(index); setShowDelete(!showDelete); }} /> */}
+                                            <img src={ThreeDotVerticalSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} onClick={() => { handleThreeDotClick(!showDelete, commentItem.id) }} />
                                         </div>
 
 
@@ -186,7 +309,7 @@ const ArticleDetail = () => {
                                 <Image src={item.user.profilePhoto} roundedCircle style={{ width: '28px', height: '28px', marginRight: '5px', marginTop: '5px' }} />
 
                                 <div style={{ display: "flex", width: "80%", flexDirection: 'column', marginTop: "8px" }}>
-                                    <span style={{ fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 'normal' }} >{item.user && item.user.name ? item.user.name : ''}</span>
+                                    <span style={{ fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 'normal' }} >{userName}</span>
                                     <input
                                         type="text"
                                         id="textInput"
@@ -220,6 +343,7 @@ const ArticleDetail = () => {
             </div>
 
         </div>
+
     )
 }
 

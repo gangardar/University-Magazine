@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import './ArticleCard.css'
 import ArticleImage from '../../../../assets/image.png'
-import MessageSvg from '../../../../assets/message.svg'
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Image, Container, Col, Row, ButtonGroup } from 'react-bootstrap';
 import ThreeDotSvg from '../../../../assets/three_dots.svg';
-import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import {useDownload} from "../../../../services/Download/useDownload"
 import JSZip from "jszip";
@@ -14,35 +12,48 @@ import FileSaver from "file-saver";
 
 
 const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
-    const[articles, setArticles] = useState();
+    console.log(data);
+    
 
     const {handleZip} = useDownload();
 
+    const [articles, setArticles] = useState();
+    const [error, setError] = useState(null);
+    const token = localStorage.getItem("token")
+
     useEffect(() => {
-        if (status === "Manager") {
-            const approvedArticles = data.filter(article => article.approveStatus === "APPROVED");
+        if (status === "Manager" && data.length > 0) {
+            const approvedArticles = data?.filter(article => article.approveStatus === "APPROVED");
             console.log(approvedArticles);
             setArticles(approvedArticles);
         } else {
             setArticles(data);
         }
     }, [data, status]);
-    
+
 
     const handleRejectClick = (article_id) => {
-        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/reject/${article_id}`)
+        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/reject/${article_id}`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 console.log('Response Reject:', response.data);
-                onViewRefresh(true)
+                onViewRefresh(true);
             })
             .catch(error => {
-                setError(error)
+                setError(error);
                 console.error('Error:', error);
             });
     };
 
     const handleAcceptClick = (article_id) => {
-        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/approve/${article_id}`)
+        axios.post(`https://university-magazine-backend.onrender.com/api/v1/article/approve/${article_id}`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 console.log('Response Approve:', response.data);
                 onViewRefresh(true)
@@ -77,13 +88,13 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
     
 
     if (!data || data.length === 0) {
-        return <div>No articles available.</div>;
+        return <div>Loading...</div>;
     }
-    
+
     if (status == null) {
         return (
             <div>
-                {articles && (articles?.map((item, index) => (
+                {articles.length > 0 && (articles.map((item, index) => (
                     <div className="card-container"
                         key={index}
                         onClick={() => onCardClick(item)}
@@ -106,7 +117,13 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
                             <Card.Body>
                                 <Card.Title style={{ margin: '12px', fontFamily: 'sans-serif' }}>{item.title ? item.title : "Title"}</Card.Title>
 
-                                <label style={{ backgroundColor: item.approveStatus ? '#55DF3E' : 'lightgrey', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>{item.approveStatus ? "Selected" : "Pending"}</label>
+                                {item.approveStatus == "APPROVED" ? (
+                                    <label style={{ backgroundColor: '#55DF3E', padding: '2px 5px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }}>Approved</label>
+                                ) : item.approveStatus == "REJECTED" ? (
+                                    <label style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Rejected</label>
+                                ) : (
+                                    <label style={{ backgroundColor: 'lightgray', color: 'black', padding: '5px 10px', borderRadius: '4px', margin: '0px 11px', fontSize: '12px', fontFamily: 'sans-serif' }} >Pending</label>
+                                )}
 
                             </Card.Body>
                         </Card>
@@ -118,7 +135,7 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
     } else {
         return (
             <div>
-                {articles && (articles?.map((item, index) => (
+                {articles?.length > 0 && (articles?.map((item, index) => (
                     <div className="card-container"
                         key={index}
                     >
