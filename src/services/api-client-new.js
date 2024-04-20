@@ -55,6 +55,10 @@ class APIClient {
   login(data){
     return axiosInstance.post(this.endpoint, data).then((res) => res.data);
   }
+
+  action(id){
+    return axiosInstance.post(`${this.endpoint}/${id}`).then((res)=> res.data);
+  }
 }
 
 export default APIClient;

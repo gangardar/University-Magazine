@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { Button, Container, Row, Col, Form} from 'react-bootstrap';
 import { BiFilter } from 'react-icons/bi'; // Import the filter icon from react-icons
 
-const FilterComponent = ({ faculties, academicYears, users, filter, onFilterChange }) => {
-  const { register, handleSubmit, reset, setValue, watch, formState: { isDefaultDirty } } = useForm(filter);
+const FilterComponent = ({ faculties, academicYears, users, onFilterChange }) => {
+  const { register, handleSubmit, reset, setValue, watch, formState: { isDefaultDirty } } = useForm();
 
   const onSubmit = (data) => {
     // Pass the selected filter values to the parent component
@@ -12,8 +12,7 @@ const FilterComponent = ({ faculties, academicYears, users, filter, onFilterChan
   };
 
   const handleReset = () => {
-    reset(); // Reset all form fields
-    // Pass empty filters to the parent component
+    reset();
     onFilterChange({});
   };
 
@@ -31,7 +30,7 @@ const FilterComponent = ({ faculties, academicYears, users, filter, onFilterChan
               ))}
             </Form.Select>
           </Col>
-          <Col md={2} className='m-1'>
+          <Col md={3} className='m-1'>
             <Form.Select {...register('selectedAcademicYear')}>
               <option value="">Select Academic Year</option>
               {academicYears?.map((year) => (
@@ -41,30 +40,19 @@ const FilterComponent = ({ faculties, academicYears, users, filter, onFilterChan
               ))}
             </Form.Select>
           </Col>
-          <Col md={2}>
-            <Form.Select {...register('selectedUser')}>
-              <option value="">Select User</option>
-              {users?.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
           <Col md={3} className='m-1'>
             <Button type="submit" variant="primary" className="me-2">
               <BiFilter /> {/* Filter icon */}
             </Button>
-            {!isDefaultDirty && (
-              <Button variant="secondary" onClick={handleReset}>
-                Reset
-              </Button>
-            )}
+            <Button variant="secondary" onClick={handleReset}>
+              Reset
+            </Button>
           </Col>
         </Row>
       </Form>
     </Container>
   );
 };
+
 
 export default FilterComponent;

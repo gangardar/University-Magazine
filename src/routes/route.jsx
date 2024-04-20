@@ -23,11 +23,17 @@ import LogoutComponent from '../component/LogoutComponent';
 import GuestPage from '../Pages/GuestPage';
 import GuestLogin from '../component/Guest/GuestLogin';
 import ReportPage from '../Pages/Admin/ReportPage';
+import GuestAdminPage from '../Pages/Admin/GuestAdminPage';
 
 const route = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/guest-login",
+    element: <GuestLogin />,
     errorElement: <NotFound />,
   },
   {
@@ -44,6 +50,7 @@ const route = createBrowserRouter([
       { path: "/admin/marketing_coordinator", element: <MarketingCoPage /> },
       { path: "/admin/student", element: <StudentAdminPage/> },
       { path: "/admin/faculty", element: <FacultyPage /> },
+      { path: "/admin/guest", element : <GuestAdminPage/>},
       { path: "/admin/term", element: <TermPage /> },
       { path: "/admin/analytics", element: <ReportPage/>},
       { path: "/admin/profile", element: <Profile />},
@@ -114,8 +121,16 @@ const route = createBrowserRouter([
     children: [
       {
         index : true,
+        path: "/marketingManager",
+        element: <MarketingManager/>
+      },
+      {
         path: "/marketingManager/home",
         element: <MarketingManager/>
+      },
+      {
+        path: "/marketingManager/profile",
+        element: <Profile />
       }
     ],   
   }
