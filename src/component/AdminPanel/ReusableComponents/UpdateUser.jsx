@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Image, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import useValidateName from '../../../services/Queries/User/useValidateName';
 
 const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, faculty, role }) => {
   const [userData , setUserData] = useState();
@@ -11,7 +12,17 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
     }
   },[data]);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const {mutateAsync: validateName, isError : isValidateNameError,
+    isSuccess : isValidateNameSuccess, error : validateNameError} = useValidateName();
+
+
+ const handleNameValidation = (e) => {
+   const name = e.target.value
+   // const validateData = {'username': name};
+   validateName(name);
+ }
+
+  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm({defaultValues:{data}});
 
   // useEffect(() => {
   //   if (data && data.length > 0) {
@@ -56,9 +67,13 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
                 <Form.Control
                   type="text"
                   placeholder="Enter Updated Name"
+                  onChangeCapture={handleNameValidation}
                   {...register('name', { required: "Faculty's name is required!" })}
                   defaultValue={data[0]?.name}
                 />
+                <span className="text-danger">{errors.name?.message}</span>
+                {isValidateNameError && (<span className="text-danger">{validateNameError?.response?.data||validateNameError?.message || validateNameError || "An expected Error Occured!"}</span>)}
+                {isValidateNameSuccess && <span className="text-success">User name is avaliable for use</span>}
               </Form.Group>
 
               <Form.Group controlId="email">
@@ -108,7 +123,7 @@ const UpdateUser = ({ handleModalClose, modalState, handleModalSubmit, data, fac
               
               )}
               <ModalFooter>
-                <Button type='submit' variant='success'>
+                <Button type='submit' variant='success' disabled={!isDirty}>
                   Submit
                 </Button>
                 <Button onClick={handleModalClose} variant='danger'>

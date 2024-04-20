@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import { Button, Form, Image, Modal} from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import useValidateName from '../../../services/Queries/User/useValidateName';
 
 export default function AddUser({handleModalSubmit, Role, faculty}) {
 
    const[modalState, setModalState]=useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const {mutateAsync: validateName, isError : isValidateNameError,
+     isSuccess : isValidateNameSuccess, error : validateNameError} = useValidateName();
+
+
+  const handleNameValidation = (e) => {
+    const name = e.target.value
+    // const validateData = {'username': name};
+    validateName(name);
+  }
 
    const handleModalClose= () => {
     setModalState(!modalState);
@@ -27,7 +38,7 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
     }
   };
 
-  const { register, handleSubmit, formState: { errors } } = useForm();  
+  const { register, handleSubmit, formState: { errors, isValid } } = useForm();  
   return (
     <>
     <Button onClick={handleModalClose} variant='success'>Add New</Button>     
@@ -56,9 +67,12 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
               <Form.Control
                 type="text"
                 placeholder="Enter Name"
+                onBlurCapture={handleNameValidation}
                 {...register("name", { required: "Name is required" })}
               />
               <span className="text-danger">{errors.name?.message}</span>
+              {isValidateNameError && (<span className="text-danger">{validateNameError?.response?.data||validateNameError?.message || validateNameError || "An expected Error Occured!"}</span>)}
+              {isValidateNameSuccess && <span className="text-success">User name is avaliable for use</span>}
             </Form.Group>
 
             <Form.Group controlId="email">
@@ -135,7 +149,7 @@ export default function AddUser({handleModalSubmit, Role, faculty}) {
 
 
             <Modal.Footer>
-              <Button type="submit" variant="success">
+              <Button type="submit" variant="success" disabled={!isValidateNameSuccess}>
                 Submit
               </Button>
               <Button onClick={handleModalClose} variant="danger">
