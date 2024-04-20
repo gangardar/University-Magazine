@@ -113,7 +113,7 @@ const UserController = ({Role}) => {
   
   const handleDelete = (id) => {
     const originalUser = {...data};
-    const confirmDelete = window.confirm('Are you sure you want to delete this faculty?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
     if (confirmDelete) {
       const updatedData = data?.filter((faculty) => faculty.id !== id);
       setData(updatedData);
@@ -128,7 +128,7 @@ const UserController = ({Role}) => {
   
 
   const handleBulkDelete = () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete selected faculties?');
+    const confirmDelete = window.confirm('Are you sure you want to delete selected users?');
     if (confirmDelete) {
       const originalData = [...data];
       const deletedIds = [];

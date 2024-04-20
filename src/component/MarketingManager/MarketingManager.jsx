@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from './NavBar';
-import backIcon from "../../assets/back_icon.svg"
 import useUser from '../../services/Queries/User/useUser';
 import { useNavigate } from 'react-router-dom';
 import ArticleCard from '../Student/Components/Card/ArticleCard';
@@ -9,6 +7,8 @@ import FilterComponent from './FilterComponent';
 import useFaculty from '../../services/Queries/Faculty/useFaculty';
 import useAcademic from '../../services/Queries/Academic/useAcademic';
 import useArticleByFaculty from '../../services/Queries/Article/useArticleByFaculty';
+import NotFound from '../ErrorPages/NotFound';
+import DataNotFound from '../Feedback/DataNotFound';
 
 const MarketingManager = () => {
     const userId = localStorage.getItem("userId");
@@ -16,6 +16,7 @@ const MarketingManager = () => {
     const [facultyData, setFacultyData] = useState([]);
     const [academicData, setAcademicData] = useState([]);
     const [filterData, setFilterData] = useState({});
+    const [filterStatus, setFilterStatus] = useState(false);
     const [userData, setUserData] = useState([]);
     const navigate = useNavigate();
 
@@ -25,10 +26,10 @@ const MarketingManager = () => {
         }
     }, [userId, navigate]);
 
-    const {data: article, isArticleLoading, isArticleError} = useArticle();
-    const {data: faculty, isFacultyLoading, isFacultyError} = useFaculty();
-    const {data: academic, isAcademicLoading, isAcademicError} = useAcademic();
-    const {data: user, isUserLoading, isUserError} = useUser();
+    const {data: article, isLoading : isArticleLoading, isError : isArticleError} = useArticle();
+    const {data: faculty, isLoading : isFacultyLoading, isError : isFacultyError} = useFaculty();
+    const {data: academic, isLoading : isAcademicLoading, isError : isAcademicError} = useAcademic();
+    const {data: user, isLoading : isUserLoading, isError : isUserError, refetch} = useUser();
 
     useEffect(()=>{
         if(article) {
@@ -57,7 +58,6 @@ const MarketingManager = () => {
 
     const handleCardClick = (item) => {
         console.log("Clicked item data:", item);
-        navigate('/marketingCoordinator/articleDetail', { state: { item: item } })
     };
     
     const handleViewRefresh = () => {
@@ -65,74 +65,60 @@ const MarketingManager = () => {
     }
 
     const handleFilterChange = (filter) => {
-        setFilterData(filter);
-        console.log(filterData);
-        const facultyId = filterData.selectedFaculty;
-        const userId = filterData.selectedUser;
-        const academicId = filterData.selectedAcademicYear;
-
-        if (facultyId) {
-            const filteredArticle = articleData.filter((article) => {
-                return article.user.faculty.id === facultyId; 
-            });
-
-            if (userId && academicId) {
-                const filteredByUserAndAcademicYear = filteredArticle.filter((article) => {
-                    return article.user.id === userId && article.academicYear.id === academicId;
+        const selectedFaculty = filter?.selectedFaculty;
+        const selectedAcademicYear = filter?.selectedAcademicYear;
+        // Initialize filter status
+        let filterStatus = false;
+    
+        if ((!selectedFaculty  && !selectedUser && !selectedAcademicYear)) {
+            console.log('reset');
+            setFilterData({}); // Reset filter data
+            refetch();
+        } else {
+            let filteredArticles = articleData;
+    
+            if (selectedFaculty) {
+                console.log("faculty");
+                filteredArticles = filteredArticles.filter((article) => {
+                    filterStatus = true; // Set filter status to true if filter is applied
+                    return article.user.faculty.id == selectedFaculty;
                 });
-                setArticleData(filteredByUserAndAcademicYear);
-            } else if (userId) {
-                const filteredByUser = filteredArticle.filter((article) => {
-                    return article.user.id === userId;
-                });
-                setArticleData(filteredByUser);
-            } else if (academicId) {
-                const filteredByAcademicYear = filteredArticle.filter((article) => {
-                    return article.academicYear.id === academicId;
-                });
-                setArticleData(filteredByAcademicYear);
-            } else {
-                setArticleData(filteredArticle);
             }
-        }
-
-        if(userId && academicId){
-            const filteredByUserAndAcademicYear = articleData.filter((article) => {
-                return article.user.id === userId && article.academicYear.id === academicId;
-            });
-            setArticleData(filteredByUserAndAcademicYear);
-        }
-
-        if(userId || academicId){
-            if (userId) {
-                const filteredByUser = articleData.filter((article) => {
-                    return article.user.id === userId;
+    
+            console.log("after first filter");
+            console.log(filteredArticles);
+    
+            if (selectedAcademicYear) {
+                console.log("Academic")
+                filteredArticles = filteredArticles.filter((article) => {
+                    filterStatus = true; // Set filter status to true if filter is applied
+                    return article.academicYear.id == selectedAcademicYear;
                 });
-                setArticleData(filteredByUser);
             }
-
-            if (academicId) {
-                const filteredByAcademicYear = articleData.filter((article) => {
-                    return article.academicYear.id === academicId;
-                });
-                setArticleData(filteredByAcademicYear);
-            }
-            
+    
+            console.log("Filtered Articles");
+            console.log(filteredArticles);
+    
+            setFilterData(filteredArticles); // Set filtered data
         }
-
-        
-        
-
-    }
+    
+        // Update filter status
+        setFilterStatus(filterStatus);
+        console.log(filterStatus)
+    };   
+    
 
     return (
         <>
-            <FilterComponent faculties={facultyData} academicYears={academicData} users={userData} filter={filterData} onFilterChange={handleFilterChange} />
+            <FilterComponent faculties={facultyData} academicYears={academicData} users={userData} onFilterChange={handleFilterChange} />
 
-            {articleData && (
+            {(articleData || filterData) && (
                 <div style={{ width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
                     <div style={{ width: '450px' }}>
-                        <ArticleCard data={articleData} status={"Manager"} onCardClick={handleCardClick} onViewRefresh={handleViewRefresh} />
+                        {(filterStatus && !filterData.length > 0) ? 
+                        <DataNotFound /> : 
+                        (<ArticleCard data={filterStatus ? filterData : articleData} status={"Manager"} onCardClick={handleCardClick} onViewRefresh={handleViewRefresh} />)}
+                    
                     </div>
                 </div>
             )}

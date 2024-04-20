@@ -165,6 +165,7 @@ const Faculty = () => {
 
   return (
     <>
+    {isFacultyFetchError && <ErrorMessage message={facultyFetchError}/>}
     {isFacultyCreateSuccess && <SuccessMessage message={"Faculty Added Successfully!"} />}
     {isFacultyCreateError && <ErrorMessage message={facultyCreateError}/>}
     {isFacultyUpdateSuccess && <SuccessMessage message={"Faculty Updated Successfully!"} />}
