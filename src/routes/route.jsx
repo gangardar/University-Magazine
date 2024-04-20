@@ -72,6 +72,15 @@ const route = createBrowserRouter([
         index : true,
         path : "/guest",
         element : <Guest/>
+      },
+      {
+        index : true,
+        path : "/guest/home",
+        element : <Guest/>
+      },
+      {
+        path : "/guest/profile",
+        element: <Profile/>
       }
     ]
   },
