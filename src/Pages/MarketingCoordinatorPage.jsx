@@ -8,10 +8,6 @@ const MarketingCoordinatorPage = () => {
   return (
     <div>
       <Outlet />
-      {/* <Routes>
-        <Route path="/marketingCoordinator/home" element={<MarketingCoHome />} />
-        <Route path="/marketingCoordinator/articleDetail" element={<ArticleDetail />} />
-      </Routes> */}
     </div>
   );
 }

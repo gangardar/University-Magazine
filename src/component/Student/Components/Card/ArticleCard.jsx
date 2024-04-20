@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import './ArticleCard.css'
 import ArticleImage from '../../../../assets/image.png'
-import MessageSvg from '../../../../assets/message.svg'
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Image, Container, Col, Row, ButtonGroup } from 'react-bootstrap';
 import ThreeDotSvg from '../../../../assets/three_dots.svg';
-import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import {useDownload} from "../../../../services/Download/useDownload"
 import JSZip from "jszip";
@@ -14,6 +12,7 @@ import FileSaver from "file-saver";
 
 
 const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
+    console.log(data);
     
 
     const {handleZip} = useDownload();
@@ -23,8 +22,8 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
     const token = localStorage.getItem("token")
 
     useEffect(() => {
-        if (status === "Manager") {
-            const approvedArticles = data.filter(article => article.approveStatus === "APPROVED");
+        if (status === "Manager" && data.length > 0) {
+            const approvedArticles = data?.filter(article => article.approveStatus === "APPROVED");
             console.log(approvedArticles);
             setArticles(approvedArticles);
         } else {
@@ -95,7 +94,7 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
     if (status == null) {
         return (
             <div>
-                {articles && (articles?.map((item, index) => (
+                {articles.length > 0 && (articles.map((item, index) => (
                     <div className="card-container"
                         key={index}
                         onClick={() => onCardClick(item)}
@@ -136,7 +135,7 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
     } else {
         return (
             <div>
-                {articles && (articles?.map((item, index) => (
+                {articles?.length > 0 && (articles?.map((item, index) => (
                     <div className="card-container"
                         key={index}
                     >

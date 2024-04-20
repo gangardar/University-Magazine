@@ -3,17 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import useUserById from '../../services/Queries/User/useUserById'; 
 import { Card, Button, Form, Image, Row, Col } from 'react-bootstrap';
 import logo from '../../assets/greenwich_green_logo.png';
-import { useForm } from 'react-hook-form';
 import UpdatePassword from './UpdatePassword';
 import LoadingSpinner from '../Feedback/LoadingSpinner';
 import UpdateEmail from './UpdateEmail';
 import ErrorMessage from '../Feedback/ErrorMessage';
+import useUpdateUser from '../../services/Queries/User/useUpdateUser';
+import SuccessMessage from '../Feedback/SuccessMessage';
 
 const Profile = () => {
     const navigate = useNavigate();
     const userId = localStorage.getItem("userId");
+    const data = new FormData();
     const { data: user, isLoading : isUserFetchLoading, 
         isError : isUserFetchError, error : userFetchError, refetch : refetchUser } = useUserById(userId);
+
+    const {mutateAsync: updateProfile, isError : isUpdatePhotoError, error : updatePhotoError,
+         isSuccess : isUpdatePhotoSuccess} = useUpdateUser();
 
     useEffect(() => {
         if(!userId){
@@ -22,8 +27,16 @@ const Profile = () => {
     }, [userId, navigate]);
 
     const handleProfileImageChange = (event) => {
+        console.log("started");
         const file = event.target.files[0];
-        const data = new useForm();
+        data.append('profilePhoto', file);
+        data.append('name', user?.name);
+        data.append('role', user?.role);
+        data.append('email', user?.email);
+        updateProfile({faculty: data, selectedFacultyId : userId}).then(
+            () => refetchUser()
+        )
+
     };
 
     const handleLogout = () => {
@@ -38,6 +51,8 @@ const Profile = () => {
         
         <div className="container mt-5">
             {isUserFetchError && <ErrorMessage message={userFetchError} />}
+            {isUpdatePhotoError && <ErrorMessage message={updatePhotoError} />}
+            {isUpdatePhotoSuccess && <SuccessMessage message={"Profile has been updated!"} />}
             <Card className="text-center p-4 shadow rounded" style={{ maxWidth: '600px', backgroundColor: '#eaf6ff' }}>
                 <Card.Header style={{ backgroundColor: '#fff' }}>
                     
@@ -52,8 +67,8 @@ const Profile = () => {
                         <div className="d-flex flex-column flex-lg-row justify-content-center align-items-center">
                             <div className="p-3">
                                 <label htmlFor="profile-image-input" className="position-relative">
-                                    <img 
-                                        src={user.profilePhoto} 
+                                    <Image 
+                                        src={user?.profilePhoto} 
                                         alt="Profile" 
                                         className="rounded" 
                                         style={{ width: '150px', height: '150px', objectFit: 'cover', cursor: 'pointer' }} 
