@@ -8,6 +8,7 @@ import ErrorMessage from './Feedback/ErrorMessage';
 import useLogin from '../services/Queries/Auth/useLogin';
 import loginendpoint from '../services/loginendpoint';
 import LoadingSpinner from './Feedback/LoadingSpinner';
+import PasswordReset from './Auth/PasswordReset';
 
 function LoginForm() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -23,6 +24,10 @@ function LoginForm() {
   
   // Using useLogin hook
   const { mutateAsync, isLoading, isError, error, data } = useLogin();
+
+  const handleReset = (data) => {
+    console.log(data);
+  }
 
   const handleFormSubmit = async (formData) => {
     try {
@@ -88,6 +93,8 @@ function LoginForm() {
                   </Form.Text>
                 }
               </Form.Group>
+
+              {true && <PasswordReset/>}
 
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 <Link to={"/guest-login"}>Login as Guest!</Link>
