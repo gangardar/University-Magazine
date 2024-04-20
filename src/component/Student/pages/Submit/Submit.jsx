@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../Submit/Submit.css"
 import Image from "../../../../assets/image.png"
+import { Link, useLocation } from 'react-router-dom';
 import Navbar from "../../Components/Navbar/Navbar";
 import axios from 'axios';
 import SuccessAlert from "../../Components/Alert/AlertDialog";
@@ -14,6 +15,7 @@ const Submit = () => {
   const [file, setFile] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
   const [showErrorAlert, setShowErrorAlert] = useState(false)
+  const [showMaxErrorAlert, setShowMaxErrorAlert] = useState(false)
   const [academicYearId, setAcademicYearId] = useState(-1)
 
   const token = localStorage.getItem("token")
@@ -25,14 +27,14 @@ const Submit = () => {
         Authorization: `Bearer ${token}`
       }
     })
-        .then(response => {
-            setAcademicYearId(response.data[0].id);
-        })
-        .catch(error => {
-            setError(error)
-            console.error('Error:', error);
-        });
-}, []);
+      .then(response => {
+        setAcademicYearId(response.data[0].id);
+      })
+      .catch(error => {
+        setError(error)
+        console.error('Error:', error);
+      });
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -44,7 +46,12 @@ const Submit = () => {
   };
 
   const handleChange = (e) => {
-    setArticleTitle(e.target.value);
+    console.log("length ===> ", e.target.value.length)
+    if (e.target.value.length <= 100) {
+      setArticleTitle(e.target.value);
+    } else {
+      setShowMaxErrorAlert(true)
+    }
   };
 
   const [isChecked, setIsChecked] = useState(false);
@@ -68,47 +75,49 @@ const Submit = () => {
 
   const handleSubmit = async () => {
 
-    if (articleTitle != "" || file != null || coverPhoto != null) {
-      if (!isChecked) {
-        setShowErrorAlert(!showErrorAlert)
-        return
-      }
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('coverPhoto', coverPhoto);
-        formData.append('title', articleTitle);
-        formData.append('user', userId);
-        formData.append('academicYear', academicYearId);
+    if (showMaxErrorAlert == false) {
+      if (articleTitle != "" || file != null || coverPhoto != null) {
+        if (!isChecked) {
+          setShowErrorAlert(!showErrorAlert)
+          return
+        }
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('coverPhoto', coverPhoto);
+          formData.append('title', articleTitle);
+          formData.append('user', userId);
+          formData.append('academicYear', academicYearId);
 
-        const response = await axios.post(
-          'https://university-magazine-backend.onrender.com/api/v1/article/add',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`
-            },
-          }
-        );
+          const response = await axios.post(
+            'https://university-magazine-backend.onrender.com/api/v1/article/add',
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+              },
+            }
+          );
 
-        console.log("Response ==> ", response.data);
-        setShowErrorAlert(false)
-        setShowSuccessDialog(true);
-      } catch (error) {
-        setShowErrorAlert(false)
-        console.error('Error uploading files:', error);
+          console.log("Response ==> ", response.data);
+          setShowErrorAlert(false)
+          setShowSuccessDialog(true);
+        } catch (error) {
+          setShowErrorAlert(false)
+          console.error('Error uploading files:', error);
+        }
       }
     }
   };
 
   const handleCancelClick = () => {
     console.log('handleCancelClick');
+    <Link to="/student/home" ></Link>
   };
 
   return (
     <div>
-
 
       {
         showSuccessDialog ? (
@@ -119,7 +128,6 @@ const Submit = () => {
           />
         ) : null
       }
-
 
       <Navbar />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -156,7 +164,12 @@ const Submit = () => {
                 }}
                 placeholder="Enter article title"
               />
-              <label htmlFor="textInput" style={{ fontFamily: 'sans-serif', fontWeight: 'normal', fontSize: '12px', marginTop: '5px', color: 'gray' }}>Maximum 100 characters</label>
+              <div style={{ flexDirection: 'row', display: 'flex' }}>
+                <label htmlFor="textInput" style={{ fontFamily: 'sans-serif', fontWeight: 'normal', fontSize: '12px', marginTop: '5px', color: 'gray' }}>Maximum 100 characters</label>
+                {showMaxErrorAlert &&
+                  <img src={ErrorSvg} alt="" style={{ width: '20px', marginTop: '7px', marginLeft: "16px", height: '15px', }} />
+                }
+              </div>
             </div>
 
             <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column' }}>
@@ -197,7 +210,10 @@ const Submit = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '28px' }}>
-              <button onClick={handleCancelClick} style={{ padding: "10px 39px", backgroundColor: 'white', borderWidth: '1px', borderRadius: "7px", marginRight: '16px', cursor: 'pointer' }}>Cancel</button>
+              <Link to="/student/home" >
+                <button onClick={handleCancelClick} style={{ padding: "10px 39px", backgroundColor: 'white', borderWidth: '1px', borderRadius: "7px", marginRight: '16px', cursor: 'pointer' }}>Cancel</button>
+              </Link>
+
               <button onClick={handleSubmit} style={{ padding: "10px 38px", backgroundColor: 'black', borderWidth: '1px', borderRadius: "7px", color: 'white', cursor: 'pointer' }}>Submit</button>
             </div>
 
