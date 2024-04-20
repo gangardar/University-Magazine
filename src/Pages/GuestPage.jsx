@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom';
+import GuestLayout from '../component/Guest/GuestLayout';
 
 const GuestPage = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const GuestPage = () => {
     
       return (
         <>
-            <Outlet />
+            <GuestLayout/>
         </>
       );
 }
