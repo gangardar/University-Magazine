@@ -6,12 +6,11 @@ import useArticle from '../../services/Queries/Article/useArticle';
 import FilterComponent from './FilterComponent';
 import useFaculty from '../../services/Queries/Faculty/useFaculty';
 import useAcademic from '../../services/Queries/Academic/useAcademic';
-import useArticleByFaculty from '../../services/Queries/Article/useArticleByFaculty';
-import NotFound from '../ErrorPages/NotFound';
 import DataNotFound from '../Feedback/DataNotFound';
 
 const MarketingManager = () => {
     const userId = localStorage.getItem("userId");
+    const userRole = localStorage.getItem("userRole");
     const [articleData, setArticleData] = useState([]);
     const [facultyData, setFacultyData] = useState([]);
     const [academicData, setAcademicData] = useState([]);

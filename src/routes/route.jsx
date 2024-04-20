@@ -24,6 +24,7 @@ import GuestPage from '../Pages/GuestPage';
 import GuestLogin from '../component/Guest/GuestLogin';
 import ReportPage from '../Pages/Admin/ReportPage';
 import GuestAdminPage from '../Pages/Admin/GuestAdminPage';
+import Guest from '../component/Guest/Guest';
 
 const route = createBrowserRouter([
   {
@@ -70,7 +71,16 @@ const route = createBrowserRouter([
       {
         index : true,
         path : "/guest",
-        element : <GuestLogin/>
+        element : <Guest/>
+      },
+      {
+        index : true,
+        path : "/guest/home",
+        element : <Guest/>
+      },
+      {
+        path : "/guest/profile",
+        element: <Profile/>
       }
     ]
   },

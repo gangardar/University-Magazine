@@ -10,6 +10,8 @@ export function getRedirectPath() {
         return "/marketingCoordinator";
       case "MANAGER":
         return "/marketingManager";
+      case "GUEST":
+        return "/guest";
       default:
         return "/";
     }

@@ -5,6 +5,7 @@ import UserInfoCard from '../Student/Components/Navbar/UserInfoCard';
 import logo from '../../assets/greenwich_green_logo.png';
 
 const NavBar = ({user}) => {
+  const userRole = localStorage.getItem('userRole')? localStorage.getItem('userRole') : '' ;
   
   return (
     <Navbar bg="light" expand="lg">
@@ -13,9 +14,13 @@ const NavBar = ({user}) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
           <Nav className="mx-auto">
-            <Nav.Link href="/marketingManager/home">Home</Nav.Link>
-            <Nav.Link href="/marketingManager/article">Article</Nav.Link>
-            <Nav.Link href="/marketingManager/profile">Profile</Nav.Link>
+            <Nav.Link href={userRole == "GUEST" ?
+             "/guest/home" :
+              "/marketingManager/home"}>Home</Nav.Link>
+            {userRole !== "GUEST" && <Nav.Link href="/marketingManager/article">Article</Nav.Link>}
+            <Nav.Link href={userRole == "GUEST"?
+            "/guest/profile" : 
+            "/marketingManager/profile"}>Profile</Nav.Link>
           </Nav>
           <Form className="d-flex">
             <FormControl type="search" placeholder="Search" className="mr-2" aria-label="Search" />
