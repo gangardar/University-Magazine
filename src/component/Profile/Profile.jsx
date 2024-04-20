@@ -36,7 +36,7 @@ const Profile = () => {
 
     return (
         
-        <div className="container mt-5">
+        <div className="container d-flex justify-content-center align-items-center flex-column mt-5">
             {isUserFetchError && <ErrorMessage message={userFetchError} />}
             <Card className="text-center p-4 shadow rounded" style={{ maxWidth: '600px', backgroundColor: '#eaf6ff' }}>
                 <Card.Header style={{ backgroundColor: '#fff' }}>

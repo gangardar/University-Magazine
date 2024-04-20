@@ -1,6 +1,6 @@
 import apiClient from "./api-client";
 
-class LoginEndPoint{
+class LoginEndPoint {
 
     login(data) {
         return apiClient.post("/user/login", data);
@@ -12,12 +12,17 @@ class LoginEndPoint{
         localStorage.setItem("userRole", userData.role);
         localStorage.setItem("userName", userData.name);
         localStorage.setItem("token", userData.token);
+        if (userData.faculty != null) {
+            localStorage.setItem("facultyId", userData.faculty.id);
+        }
     }
 
     clearUserData() {
         localStorage.removeItem("userId");
         localStorage.removeItem("userRole");
         localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("facultyId");
     }
 
 }
