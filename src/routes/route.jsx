@@ -106,6 +106,7 @@ const route = createBrowserRouter([
       },
       { path: "/student/submit", element: <Submit /> },
       { path: "/student/articleDetail", element: <ArticleDetail/> },
+      { path: "/student/profile", element: <Profile />}
     ]
   },
   {
@@ -120,6 +121,7 @@ const route = createBrowserRouter([
       },
       { path: "/marketingCoordinator/home", element: <MarketingCoHome /> },
       { path: "/marketingCoordinator/articleDetail", element: <ArticleDetail /> },
+      { path: "/marketingCoordinator/profile", element: <Profile />}
     ]
   },
   {

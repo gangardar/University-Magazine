@@ -5,17 +5,17 @@ import ArrowUpSvg from '../../../../assets/arrow-up.svg';
 import FilterSvg from '../../../../assets/filter.svg'
 import axios from 'axios';
 
-const Dropdown = ({ status, academicYearData }) => {
+
+const Dropdown = ({ status, academicYearData, onOptionSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-
-  console.log("academicYearData ==> ", academicYearData && academicYearData.length > 0 ? academicYearData[0].name : null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleOptionSelect = (option) => {
+    onOptionSelect(option.id);
     setSelectedOption(option.name);
     setIsOpen(false);
   };

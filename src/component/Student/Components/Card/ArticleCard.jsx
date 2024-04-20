@@ -11,8 +11,7 @@ import JSZip from "jszip";
 import FileSaver from "file-saver";
 
 
-const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
-    console.log(data);
+const ArticleCard = ({ data, onCardClick, status, onViewRefresh, loadingStatus }) => {
     
 
     const {handleZip} = useDownload();
@@ -87,8 +86,12 @@ const ArticleCard = ({ data, onCardClick, status, onViewRefresh }) => {
 
     
 
-    if (!data || data.length === 0) {
-        return <div>Loading...</div>;
+    if (data.length === 0 && loadingStatus == "") {
+        return <div style={{margin:"10px"}}>Loading...</div>;
+    }
+
+    if (data.length == 0 && loadingStatus == "empty") {
+        return <div style={{margin:"10px"}}>There is no article</div>
     }
 
     if (status == null) {

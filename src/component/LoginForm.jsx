@@ -33,8 +33,7 @@ function LoginForm() {
       const path = getRedirectPath();
       console.log(path);
       navigate(path);
-    } catch (error) {
-      reset();
+    } catch (error) {reset();
       console.error("Login failed:", error);
     }
   };

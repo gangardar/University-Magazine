@@ -49,7 +49,7 @@ const Profile = () => {
 
     return (
         
-        <div className="container mt-5">
+        <div className="container d-flex justify-content-center align-items-center flex-column mt-5">
             {isUserFetchError && <ErrorMessage message={userFetchError} />}
             {isUpdatePhotoError && <ErrorMessage message={updatePhotoError} />}
             {isUpdatePhotoSuccess && <SuccessMessage message={"Profile has been updated!"} />}

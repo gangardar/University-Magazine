@@ -5,12 +5,15 @@ import logo from '../../../../assets/logo.png';
 import search_icon from '../../../../assets/search-icon-w.png';
 import notification from '../../../../assets/notification.png';
 import user from '../../../../assets/user.png';
+import { NavLink } from 'react-bootstrap';
 
 const Navbar = ({ data, status }) => {
     const location = useLocation();
 
     const userName = localStorage.getItem("userName")
     const role = localStorage.getItem("userRole")
+
+    console.log("STATUS ==> ", status)
 
     return (
 
@@ -85,17 +88,28 @@ const Navbar = ({ data, status }) => {
                 }
 
                 <div style={{ display: 'flex', flexDirection: 'row', width: '40%', alignItems: 'center', justifyContent: 'end' }}>
-                    <div className="search-box">
+                    {/* <div className="search-box">
                         <input type="text" placeholder="Search" />
                         <img src={search_icon} alt="" className="search-icon" />
-                    </div>
+                    </div> */}
 
-                    <img src={notification} alt="" style={{ width: '20px', height: '20px', marginLeft: '20px', marginRight: '16px', cursor: 'pointer' }} />
-                    <div>
-                    <img src={user} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} />
-                    {/* <div style={{zIndex:'1', position: 'absolute', backgroundColor:'lightgray', width:'80px', marginTop:'10px', justifyContent:'center', alignContent:'center', textAlign:'center', fontSize:'14px', height:'30px'}}>Logout</div> */}
-                    </div>
+                    {/* <img src={notification} alt="" style={{ width: '20px', height: '20px', marginLeft: '20px', marginRight: '16px', cursor: 'pointer' }} /> */}
+
+                    {role == "STUDENT" ? (
                     
+                        <Link to="/student/profile" style={{ textDecoration: 'none' }}>
+                            <div>
+                                <img src={user} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} />
+                            </div>
+                        </Link>
+                    ) : (
+                        <Link to="/marketingCoordinator/profile" style={{ textDecoration: 'none' }}>
+                            <div>
+                                <img src={user} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} />
+                            </div>
+                        </Link>
+                    )}
+
                     <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center', marginLeft: '16px', marginRight: '25px' }}>
                         <label style={{ fontFamily: 'serif', fontSize: '14px' }}>{userName}</label>
                         <label style={{ fontFamily: 'serif', fontSize: '14px' }}>{role}</label>
