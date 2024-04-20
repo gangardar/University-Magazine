@@ -34,7 +34,7 @@ const Guest = () => {
     };
     
     const handleViewRefresh = () => {
-        console.log("handle view Refresh");
+        console.log("handle Refresh");
     }
     
 
