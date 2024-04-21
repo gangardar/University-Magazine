@@ -12,6 +12,7 @@ class LoginEndPoint {
         localStorage.setItem("userRole", userData.role);
         localStorage.setItem("userName", userData.name);
         localStorage.setItem("token", userData.token);
+        localStorage.setItem("profilePhoto", userData.profilePhoto);
         if (userData.faculty != null) {
             localStorage.setItem("facultyId", userData.faculty.id);
         }
@@ -23,6 +24,7 @@ class LoginEndPoint {
         localStorage.removeItem("token");
         localStorage.removeItem("userName");
         localStorage.removeItem("facultyId");
+        localStorage.removeItem("profilePhoto");
     }
 
 }

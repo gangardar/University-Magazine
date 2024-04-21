@@ -5,15 +5,16 @@ import logo from '../../../../assets/logo.png';
 import search_icon from '../../../../assets/search-icon-w.png';
 import notification from '../../../../assets/notification.png';
 import user from '../../../../assets/user.png';
-import { NavLink } from 'react-bootstrap';
+import { NavLink, Image, } from 'react-bootstrap';
 
 const Navbar = ({ data, status }) => {
     const location = useLocation();
 
     const userName = localStorage.getItem("userName")
     const role = localStorage.getItem("userRole")
+    const profilePhoto = localStorage.getItem("profilePhoto")
 
-    console.log("STATUS ==> ", status)
+    console.log("profilePhoto ==> ", profilePhoto)
 
     return (
 
@@ -96,16 +97,18 @@ const Navbar = ({ data, status }) => {
                     {/* <img src={notification} alt="" style={{ width: '20px', height: '20px', marginLeft: '20px', marginRight: '16px', cursor: 'pointer' }} /> */}
 
                     {role == "STUDENT" ? (
-                    
+
                         <Link to="/student/profile" style={{ textDecoration: 'none' }}>
                             <div>
-                                <img src={user} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} />
+                                <Image src={profilePhoto} style={{width:'35px', height:'35px'}} roundedCircle />
+                                {/* <img src={profilePhoto} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} /> */}
                             </div>
                         </Link>
                     ) : (
                         <Link to="/marketingCoordinator/profile" style={{ textDecoration: 'none' }}>
                             <div>
-                                <img src={user} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} />
+                                <Image src={profilePhoto} style={{width:'35px', height:'35px'}} roundedCircle />
+                                {/* <img src={profilePhoto} alt="" style={{ width: '35px', height: '35px', marginLeft: '20px', cursor: 'pointer' }} /> */}
                             </div>
                         </Link>
                     )}

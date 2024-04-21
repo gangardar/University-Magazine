@@ -5,10 +5,12 @@ import ArrowUpSvg from '../../../../assets/arrow-up.svg';
 import FilterSvg from '../../../../assets/filter.svg'
 import axios from 'axios';
 
+const articleStatusList = ["PENDING", "APPROVED", "REJECTED"]
 
-const Dropdown = ({ status, academicYearData, onOptionSelect }) => {
+const Dropdown = ({ status, academicYearData, onOptionSelect, onArticleStatus, isSelectedArticleStatus }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedArticleStatus, setSelectedArticleStatus] = useState(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -19,6 +21,16 @@ const Dropdown = ({ status, academicYearData, onOptionSelect }) => {
     setSelectedOption(option.name);
     setIsOpen(false);
   };
+
+  const handleSelectedArticleStatus = (option) => {
+    console.log("handleSelectedArticleStatus ===> ", option)
+    setIsOpen(false);
+    setSelectedArticleStatus(option);
+    onArticleStatus(option)
+    
+  };
+
+  console.log("selectedArticleStatus ==> ", selectedArticleStatus)
 
   if (status == "marketingCoHome") {
     return (
@@ -63,6 +75,7 @@ const Dropdown = ({ status, academicYearData, onOptionSelect }) => {
                   key={option.id}
                   className='dropdown-item'
                   onClick={() => handleOptionSelect(option)}
+                  style={{fontSize:'12px'}}
                 >
                   {option.name}
                 </div>
@@ -121,6 +134,59 @@ const Dropdown = ({ status, academicYearData, onOptionSelect }) => {
         )}
       </div>
     )
+  } else if (isSelectedArticleStatus == true) {
+    return (
+      <div style={{ width: '160px' }}>
+        <div style={{
+          border: '1px solid black',
+          borderRadius: '10px',
+          width: '120px',
+          display: 'flex',
+          height: '35px',
+          alignItems: 'center',
+          alignContent: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer'
+        }} onClick={toggleDropdown} >
+          {selectedArticleStatus ? (
+            <span style={{ fontSize: '12px' }}>{selectedArticleStatus}</span>
+          ) : (
+            <span style={{ fontSize: '12px' }}>{"PENDING"}</span>
+          )}
+          {isOpen ? (
+            <img src={ArrowUpSvg} alt='' className='arrow-up' style={{ marginLeft: '10px', width: '16px' }} />
+          ) : (
+            <img src={ArrowDownSvg} alt='' className='arrow-down' style={{ marginLeft: '10px', width: '14px' }} />
+          )}
+        </div>
+        {isOpen && (
+          <div style={{
+            width: '100%',
+            position: 'absolute',
+            zIndex: '1',
+            background: 'white',
+            width: '150px',
+            alignItems: 'center',
+            alignContent: 'center',
+            justifyContent: 'center',
+            paddingLeft: '0px'
+          }}>
+            {
+              articleStatusList.map((option) => (
+                <div
+                  // key={option}
+                  className='dropdown-item'
+                  onClick={() => handleSelectedArticleStatus(option)}
+                  style={{fontSize:'12px'}}
+                >
+                  {option}
+                </div>
+              ))
+            }
+          </div>
+        )}
+      </div>
+    );
   }
   else {
     return (
