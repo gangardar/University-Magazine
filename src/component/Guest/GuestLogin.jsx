@@ -82,7 +82,7 @@ const GuestLogin = () => {
                   <Form.Control
                     as="select"
                     placeholder="Enter Faculty ID"
-                    {...register("faculty", { required: "Faculty ID is required" })}
+                    {...register("facultyId", { required: "Faculty ID is required" })}
                   >
                     {facultyData?.length !== 0 &&
                       facultyData?.map((data) => (
